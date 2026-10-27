@@ -1,0 +1,1268 @@
+<!DOCTYPE html>
+<!--
+==============================================================================
+  단열 변화와 대기 안정도 — 강의 덱 (지구시스템과학 Ⅲ-02, 교과서 94~99쪽)
+  디자인: 1920×1080 무대 · 면 색이 구획 · 액션 블루 하나 · 그림자 없음 (pe-lecture 형식)
+  하네스: slide-harness 규칙 (판서 펜, 목차, 자동 점검, KaTeX, 어절 줄바꿈, 인쇄)
+------------------------------------------------------------------------------
+  [하우스 규칙]
+  T1  줄바꿈은 어절 단위. (CSS keep-all + 엔진 keepWords)
+  T2  수식은 중간에서 줄이 바뀌지 않는다.   M1  수식 기호는 KaTeX($...$).
+  D4  그래프 축 라벨은 물리량과 단위: 기온(℃), 고도(km).
+  D5  SVG id는 슬라이드마다 고유.
+  S1  정답·풀이는 data-step으로 숨겼다가 하나씩 공개.
+  S2  연습 문제는 한 슬라이드에 하나. 정답은 가운데.
+  교사용 검증 자료는 이 덱에 넣지 않는다 (별도 HWPX).
+------------------------------------------------------------------------------
+  [조작]  →/스페이스/▶버튼 다음  ←/◀버튼 이전 (화면 클릭으로는 넘어가지 않음)  O 전체 보기  T 대본  R 다시 보기
+          F 전체 화면  P 판서 펜  X 판서 지우기  B/W 화면 가리기  D 자동 점검  H 도움말
+          숫자+Enter 해당 장으로   (주소 끝 ?audit 열자마자 점검)
+==============================================================================
+-->
+<html lang="ko" translate="no">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+<meta name="google" content="notranslate">
+<title>강의 · 단열 변화와 대기 안정도</title>
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+<style>
+:root{
+  --c-white:#ffffff; --c-parchment:#f5f5f7; --c-black:#000000; --c-dark:#1d1d1f; --c-graphite:#272729;
+  --ink:#1d1d1f; --ink-2:#6e6e73; --ink-3:#86868b; --on-dark:#f5f5f7; --on-dark-2:#a1a1a6; --on-dark-3:#6e6e73;
+  --hair:#e0e0e0; --hair-dark:#3a3a3c;
+  --action:#0066cc; --action-dark:#2997ff;
+  /* 대기 — 어두운 면 기본값 */
+  --dry:#FF9F0A; --moist:#30D158; --dew:#64D2FF; --env:#FF453A; --td:#BF5AF2; --ok:#30D158; --bad:#FF453A; --mid:#FF9F0A;
+  --dry-lo:#B25000; --moist-lo:#1E8B3E; --dew-lo:#0062A3; --env-lo:#D70015; --td-lo:#8944AB; --ok-lo:#1E8B3E; --bad-lo:#D70015; --mid-lo:#A45200;
+  --font:"Pretendard Variable",Pretendard,-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Malgun Gothic","Noto Sans KR",sans-serif;
+  --ease-out:cubic-bezier(.2,.8,.2,1); --ease-inout:cubic-bezier(.65,0,.35,1);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;overflow:hidden;background:#000}
+body{font-family:var(--font);color:var(--ink);-webkit-font-smoothing:antialiased;word-break:keep-all;overflow-wrap:break-word}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+
+/* ── 무대 ── */
+#viewport{position:fixed;inset:0;overflow:hidden;background:#000}
+#stage{position:absolute;left:50%;top:50%;width:1920px;height:1080px;overflow:hidden;background:#000}
+.slide{position:absolute;inset:0;overflow:hidden;opacity:0;visibility:hidden;transition:opacity .45s var(--ease-inout),visibility 0s .45s}
+.slide.is-on{opacity:1;visibility:visible;transition:opacity .45s var(--ease-inout);z-index:2}
+.slide[data-tile="black"]{background:var(--c-black);color:var(--on-dark)}
+.slide[data-tile="dark"]{background:var(--c-dark);color:var(--on-dark)}
+.slide[data-tile="graphite"]{background:var(--c-graphite);color:var(--on-dark)}
+.slide[data-tile="light"]{background:var(--c-white);color:var(--ink)}
+.slide[data-tile="parchment"]{background:var(--c-parchment);color:var(--ink)}
+.slide[data-tile="light"],.slide[data-tile="parchment"]{
+  --dry:var(--dry-lo); --moist:var(--moist-lo); --dew:var(--dew-lo); --env:var(--env-lo); --td:var(--td-lo);
+  --ok:var(--ok-lo); --bad:var(--bad-lo); --mid:var(--mid-lo);
+  --fg:var(--ink); --t2:var(--ink-2); --t3:var(--ink-3); --hl:var(--hair); --act:var(--action); --panel:#f5f5f7;
+  --grid:#e8e8ed; --sky:#eef5fb; --ground:#d9c7a3; --ground-edge:#a08a62; --cloud:#ffffff; --cloud-edge:#c7c7cc;
+}
+.slide[data-tile="parchment"]{--panel:#ffffff}
+.slide[data-tile="black"],.slide[data-tile="dark"],.slide[data-tile="graphite"]{
+  --fg:var(--on-dark); --t2:var(--on-dark-2); --t3:var(--on-dark-3); --hl:var(--hair-dark); --act:var(--action-dark); --panel:#1d1d1f;
+  --grid:#333336; --sky:#141c24; --ground:#5a4a33; --ground-edge:#8f7a55; --cloud:#e5e5ea; --cloud-edge:#8e8e93;
+}
+.slide[data-tile="dark"]{--panel:#2c2c2e}
+
+/* ── 글자 체계(무대 px) ── */
+.t-title{font-size:96px;font-weight:600;line-height:1.1;letter-spacing:-.028em}
+.t-head{font-size:64px;font-weight:600;line-height:1.14;letter-spacing:-.022em}
+.t-lead{font-size:44px;font-weight:400;line-height:1.3;letter-spacing:-.012em}
+.t-label{font-size:36px;font-weight:600;line-height:1.2;letter-spacing:-.01em}
+.t-body{font-size:34px;font-weight:400;line-height:1.5;letter-spacing:-.01em}
+.t-cap{font-size:27px;font-weight:400;line-height:1.4}
+.t-eyebrow{font-size:30px;font-weight:600;line-height:1.2;color:var(--t2)}
+.t-eyebrow b{color:var(--act);margin-right:10px}
+.num{font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+.mute{color:var(--t2)} .mute2{color:var(--t3)}
+.c-dry{color:var(--dry)} .c-moist{color:var(--moist)} .c-dew{color:var(--dew)} .c-env{color:var(--env)} .c-td{color:var(--td)} .c-act{color:var(--act)}
+.abs{position:absolute}
+.full-svg{position:absolute;inset:0;width:1920px;height:1080px;overflow:visible}
+svg text{font-family:var(--font)}
+.hd{position:absolute;left:120px;top:80px;right:120px}
+.hd .t-head{margin-top:10px}
+.hd.sm .t-head{font-size:54px}
+.panel{background:var(--panel);border-radius:22px;padding:36px 44px}
+.center{text-align:center}
+.katex{font-size:1.05em;white-space:nowrap}
+
+/* ── 등장 ── */
+@keyframes in{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:none}}
+@keyframes fadein{from{opacity:0}to{opacity:1}}
+.slide.is-on .in{animation:in .9s var(--ease-out) both;animation-delay:calc(var(--d,0)*1ms)}
+.slide.is-on .fin{animation:fadein 1.2s ease both;animation-delay:calc(var(--d,0)*1ms)}
+[data-step]{opacity:0;transition:opacity .6s var(--ease-out),transform .6s var(--ease-out)}
+[data-step].rise{transform:translateY(24px)}
+[data-step].on{opacity:1}
+[data-step].rise.on{transform:none}
+[data-step]:not(.on){pointer-events:none}
+
+/* ── 빈칸 ── */
+.blank{display:inline-block;position:relative;min-width:150px;padding:0 18px;text-align:center;border-bottom:3px solid var(--hl);line-height:1.25;vertical-align:baseline}
+.blank b{font-weight:600;color:var(--act);opacity:0;transition:opacity .5s var(--ease-out)}
+.blank.on b{opacity:1}
+.blank.on{border-bottom-color:var(--act)}
+
+/* ── 카드 ── */
+.cards{position:absolute;left:120px;right:120px;display:grid;gap:28px}
+.card{border-radius:22px;background:var(--panel);padding:38px 40px 42px}
+.card h4{font-size:40px;font-weight:600;letter-spacing:-.015em}
+.card p{font-size:30px;line-height:1.5;margin-top:14px;color:var(--t2)}
+.card .k{font-size:26px;font-weight:600;letter-spacing:.02em}
+.card .big{font-size:120px;font-weight:600;letter-spacing:-.03em;line-height:1}
+#s14 .card p{font-size:34px}
+.card .big small{font-size:40px;font-weight:500;margin-left:8px}
+
+/* ── 조작 요소(슬라이드 안) ── */
+.ctl{display:block;font-size:30px;font-weight:600;margin-top:26px}
+.ctl:first-child{margin-top:0}
+.ctl span.v{float:right;font-size:36px;font-weight:600;color:var(--act);font-variant-numeric:tabular-nums}
+.ctl input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:12px;border-radius:6px;background:var(--hl);margin-top:22px;outline:0}
+.ctl input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:46px;height:46px;border-radius:50%;background:#fff;border:1px solid #d2d2d7;box-shadow:0 2px 6px rgba(0,0,0,.18);cursor:pointer}
+.ctl input[type=range]::-moz-range-thumb{width:46px;height:46px;border-radius:50%;background:#fff;border:1px solid #d2d2d7;cursor:pointer}
+.ctl input[type=range]:focus-visible{outline:3px solid var(--act);outline-offset:8px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;height:64px;padding:0 30px;border-radius:32px;background:var(--panel);color:var(--fg);font-size:27px;font-weight:600;border:1.5px solid var(--hl);transition:background .2s,border-color .2s,color .2s}
+.btn:hover{border-color:var(--act);color:var(--act)}
+.btn:active{transform:translateY(1px)}
+.btn.primary{background:var(--act);border-color:var(--act);color:#fff}
+.btn.primary:hover{filter:brightness(1.1);color:#fff}
+.btn[aria-pressed="true"]{background:var(--fg);border-color:var(--fg);color:var(--panel)}
+.btn.ok{background:var(--ok);border-color:var(--ok);color:#fff}
+.btn.bad{background:var(--bad);border-color:var(--bad);color:#fff}
+.btn:focus-visible,.slide input:focus-visible,.slide select:focus-visible{outline:4px solid var(--act);outline-offset:3px}
+.row{display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+.slide input[type=number],.slide select{font:inherit;font-size:30px;font-weight:600;height:60px;padding:0 14px;border-radius:14px;border:1.5px solid var(--hl);background:var(--panel);color:var(--fg);font-variant-numeric:tabular-nums}
+.slide input[type=number]{width:130px;text-align:center}
+.slide input.ok,.slide select.ok{border-color:var(--ok);color:var(--ok);background:color-mix(in srgb,var(--ok) 10%,var(--panel))}
+.slide input.bad,.slide select.bad{border-color:var(--bad);color:var(--bad);background:color-mix(in srgb,var(--bad) 10%,var(--panel))}
+.slide select.mid{border-color:var(--mid);color:var(--mid);background:color-mix(in srgb,var(--mid) 12%,var(--panel))}
+.fb{font-size:28px;font-weight:600;min-height:40px;line-height:1.4}
+.fb.ok{color:var(--ok)} .fb.bad{color:var(--bad)} .fb.mid{color:var(--mid)}
+table.dt{border-collapse:collapse;font-size:30px;font-variant-numeric:tabular-nums}
+table.dt th{font-size:24px;font-weight:600;color:var(--t2);padding:10px 22px;border-bottom:1.5px solid var(--hl);text-align:center}
+table.dt td{padding:5px 22px;border-bottom:1px solid var(--hl);text-align:center;height:62px}
+table.dt tr.hot td{background:color-mix(in srgb,var(--mid) 16%,transparent)}
+table.dt tr.cur td{background:color-mix(in srgb,var(--act) 12%,transparent)}
+.legend{display:flex;flex-wrap:wrap;gap:8px 30px;font-size:24px;color:var(--t2)}
+.legend i{display:inline-block;width:40px;height:0;border-top:5px solid;vertical-align:middle;margin-right:10px}
+.read{border-radius:18px;background:var(--panel);padding:16px 22px;border:2px solid transparent;transition:border-color .2s}
+.read.active{border-color:var(--act)}
+.read h5{font-size:22px;font-weight:600;color:var(--t2)}
+.read .bigv{font-size:44px;font-weight:600;letter-spacing:-.02em;font-variant-numeric:tabular-nums;line-height:1.15}
+.read .bigv small{font-size:26px;font-weight:500;margin-left:4px}
+.read .sub{font-size:22px;color:var(--t2);font-variant-numeric:tabular-nums;line-height:1.4}
+.badge{display:inline-block;font-size:34px;font-weight:600;padding:8px 26px;border-radius:999px}
+.badge.s{background:color-mix(in srgb,var(--dew) 16%,transparent);color:var(--dew)}
+.badge.u{background:color-mix(in srgb,var(--env) 14%,transparent);color:var(--env)}
+.badge.c{background:color-mix(in srgb,var(--mid) 16%,transparent);color:var(--mid)}
+.answer{border-radius:22px;background:var(--panel);padding:30px 40px;font-size:32px;line-height:1.55}
+.xo{display:grid;grid-template-columns:auto 1fr;gap:10px 22px;align-items:baseline;font-size:31px;line-height:1.45}
+.xo .x{color:var(--bad);font-weight:700}.xo .o{color:var(--ok);font-weight:700}
+.poll .btn{justify-content:space-between;width:100%;height:76px;font-size:29px}
+.poll .btn b{font-variant-numeric:tabular-nums;color:var(--act);font-size:32px}
+
+/* ── 조작 버튼 ── */
+#ui{position:fixed;right:16px;bottom:16px;display:flex;gap:8px;align-items:center;z-index:50;transition:opacity .4s}
+#ui.idle{opacity:.22}
+#ui button,#ui .count{height:40px;min-width:40px;border-radius:20px;background:rgba(118,118,128,.55);color:#fff;display:inline-flex;align-items:center;justify-content:center;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+#ui .count{padding:0 16px;font-size:13px;font-weight:600;font-variant-numeric:tabular-nums;white-space:nowrap;cursor:pointer}
+#ui svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+#ui button.act{background:#0071e3}
+#ui button:focus-visible{outline:2px solid #2997ff;outline-offset:2px}
+@media (max-width:480px){#ui{right:8px;left:8px;bottom:10px;gap:4px;justify-content:center}#ui button,#ui .count{height:36px;min-width:36px}}
+#bar{position:fixed;left:0;bottom:0;height:3px;background:rgba(134,134,139,.7);z-index:40;transition:width .4s var(--ease-out)}
+.overlay{position:fixed;inset:0;z-index:60;display:none;background:rgba(40,40,42,.96);color:#f5f5f7;overflow:auto;padding:40px clamp(16px,5vw,80px)}
+.overlay.show{display:block}
+.overlay h3{font-size:22px;font-weight:600;margin-bottom:20px}
+#grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px}
+#grid button{aspect-ratio:16/9;border-radius:10px;padding:12px;text-align:left;display:flex;flex-direction:column;justify-content:space-between;font-size:14px;font-weight:600;line-height:1.3;border:2px solid transparent}
+#grid button small{font-size:11px;opacity:.6}
+#grid button.cur{border-color:#2997ff}
+#grid .sec{grid-column:1/-1;font-size:13px;font-weight:600;color:#a1a1a6;margin-top:10px}
+#help table{border-collapse:collapse;font-size:15px}
+#help td{padding:7px 18px 7px 0;vertical-align:top}
+kbd{display:inline-block;min-width:26px;padding:2px 8px;border-radius:6px;background:#48484a;font:inherit;font-size:13px;text-align:center}
+#notes{position:fixed;left:0;right:0;bottom:0;z-index:45;display:none;max-height:38vh;overflow:auto;background:rgba(29,29,31,.94);color:#f5f5f7;padding:18px clamp(16px,5vw,64px) 70px;font-size:clamp(15px,1.6vw,22px);line-height:1.6}
+#notes.show{display:block}
+#notes b{color:#2997ff;font-weight:600}
+#blackout{position:fixed;inset:0;z-index:55;display:none}
+#audit ul{list-style:none;font-size:15px;line-height:1.7}
+#audit button{background:#48484a;border-radius:6px;padding:1px 8px;margin-right:8px;font-size:13px}
+/* 판서 */
+#ink{position:absolute;inset:0;width:1920px;height:1080px;z-index:30;pointer-events:none}
+body.pen-on #ink{pointer-events:auto;cursor:crosshair}
+@media (prefers-reduced-motion:reduce){.slide,.slide.is-on .in,.slide.is-on .fin,[data-step]{animation:none!important;transition:none!important}}
+@media print{
+  @page{size:1920px 1080px;margin:0}
+  html,body{overflow:visible;background:#fff}
+  #viewport{position:static}
+  #stage{position:relative;left:0;top:0;transform:none!important;width:1920px;height:auto;overflow:visible}
+  .slide{position:relative;opacity:1;visibility:visible;width:1920px;height:1080px;page-break-after:always}
+  [data-step],.blank b{opacity:1!important;transform:none!important}
+  #ui,#bar,.overlay,#notes,#blackout,#ink{display:none!important}
+}
+</style>
+</head>
+<body>
+<div id="viewport"><div id="stage">
+<canvas id="ink" width="1920" height="1080" aria-hidden="true"></canvas>
+
+<!-- 01 표지 -->
+<section class="slide" id="s1" data-tile="black" data-sec="표지" data-title="표지">
+  <svg class="full-svg" id="titleSvg" viewBox="0 0 1920 1080" aria-hidden="true"></svg>
+  <div class="abs center" style="left:0;right:0;top:700px">
+    <div class="t-eyebrow in" style="--d:300">지구시스템과학 · Ⅲ. 강수 과정과 대기의 운동 · 02</div>
+    <div class="t-title in" style="--d:450;margin-top:18px">단열 변화와 대기 안정도</div>
+    <div class="t-lead mute in" style="--d:600;margin-top:18px">산을 넘은 바람은 왜 뜨거워질까?</div>
+  </div>
+</section>
+
+<!-- 02 도입 -->
+<section class="slide" id="s2" data-tile="dark" data-sec="도입" data-title="강릉은 비, 홍천은 30 ℃">
+  <div class="hd"><div class="t-eyebrow in">도입 · 늦봄 어느 날 (예시 상황)</div><div class="t-head in" style="--d:100">같은 시각, 산 하나를 사이에 두고</div></div>
+  <div class="abs center" data-step="1" style="left:160px;width:620px;top:330px">
+    <div class="t-label mute">홍천 · 영서</div>
+    <div class="num" style="font-size:180px;font-weight:600;letter-spacing:-.04em;line-height:1.1;color:var(--env)">30<span style="font-size:60px">℃</span></div>
+    <div class="t-body">맑고 바싹 마른 바람</div>
+  </div>
+  <svg class="abs" data-step="1" viewBox="0 0 400 300" style="left:760px;top:330px;width:400px;height:300px" aria-hidden="true">
+    <path d="M0 300 L120 170 L200 60 L280 170 L400 300Z" fill="#3a3a3c"/>
+    <text x="200" y="40" text-anchor="middle" font-size="26" fill="#a1a1a6">태백산맥</text>
+    <path d="M380 120 h-90 m14 -12 l-14 12 l14 12" stroke="#2997ff" stroke-width="6" fill="none"/>
+    <text x="330" y="100" text-anchor="middle" font-size="24" fill="#2997ff">북동풍</text>
+  </svg>
+  <div class="abs center" data-step="1" style="left:1140px;width:620px;top:330px">
+    <div class="t-label mute">강릉 · 영동</div>
+    <div class="num" style="font-size:180px;font-weight:600;letter-spacing:-.04em;line-height:1.1;color:var(--dew)">17<span style="font-size:60px">℃</span></div>
+    <div class="t-body">흐리고 비</div>
+  </div>
+  <div class="abs center t-lead" data-step="2" style="left:0;right:0;top:760px">바람이 산을 넘었을 뿐인데, <b class="c-env">13 ℃</b>나 차이 나는 이유는?</div>
+  <div class="abs center t-cap mute" data-step="2" style="left:0;right:0;top:860px">오늘 수업이 끝날 때 이 질문에 숫자로 답할 수 있다</div>
+</section>
+
+<!-- 03 예상 투표 -->
+<section class="slide" id="s3" data-tile="light" data-sec="도입" data-title="먼저 예상해 보기">
+  <div class="hd"><div class="t-eyebrow in">도입 · 예상</div><div class="t-head in" style="--d:100">홍천이 더 뜨거운 까닭은 무엇일까?</div></div>
+  <div class="abs poll no-nav" style="left:120px;top:330px;width:1100px;display:grid;gap:18px">
+    <button class="btn" data-i="0">① 홍천이 원래 더 남쪽이라서 <b>0</b></button>
+    <button class="btn" data-i="1">② 산을 내려오며 공기가 압축되어서 <b>0</b></button>
+    <button class="btn" data-i="2">③ 비를 뿌리면서 공기가 열을 얻어서 <b>0</b></button>
+    <button class="btn" data-i="3">④ 잘 모르겠다 <b>0</b></button>
+  </div>
+  <div class="abs t-body mute" style="left:1300px;top:340px;width:500px">손을 든 학생 수만큼 눌러 집계한다.</div>
+  <div class="abs panel t-body" data-step="1" style="left:1300px;top:520px;width:500px">②와 ③ 모두 <b class="c-act">반쪽 정답</b>이다.<br>둘이 어떻게 합쳐지는지 푄&nbsp;실험실에서 확인한다.</div>
+</section>
+
+<!-- 04 학습 목표 -->
+<section class="slide" id="s4" data-tile="parchment" data-sec="도입" data-title="학습 목표">
+  <div class="hd"><div class="t-eyebrow in">학습 목표</div><div class="t-head in" style="--d:100">오늘 할 수 있게 될 것</div></div>
+  <div class="cards" style="top:330px;grid-template-columns:repeat(3,1fr)">
+    <div class="card" data-step="1"><div class="k c-act">1</div><h4 style="margin-top:18px">단열 변화</h4><p>공기가 오르내릴 때 기온과 습도가 어떻게 변하는지 설명한다.</p></div>
+    <div class="card" data-step="2"><div class="k c-act">2</div><h4 style="margin-top:18px">푄</h4><p>산을 넘은 바람이 고온 건조해지는 과정을 단열 감률로 계산한다.</p></div>
+    <div class="card" data-step="3"><div class="k c-act">3</div><h4 style="margin-top:18px">대기 안정도</h4><p>단열선도에 관측 자료를 그려 기층의 안정도와 구름을 예측한다.</p></div>
+  </div>
+</section>
+
+<!-- 05 단원 opener -->
+<section class="slide" id="s5" data-tile="black" data-sec="1. 단열 변화" data-title="1. 단열 변화">
+  <div class="abs" style="left:120px;top:380px">
+    <div class="t-eyebrow in"><b>1</b>교과서 94~95쪽</div>
+    <div class="t-title in" style="--d:150;margin-top:20px">단열 변화</div>
+    <div class="t-lead mute in" style="--d:300;margin-top:20px">열을 주고받지 않아도 기온은 변한다</div>
+  </div>
+</section>
+
+<!-- 06 단열 팽창/압축 -->
+<section class="slide" id="s6" data-tile="light" data-sec="1. 단열 변화" data-title="단열 팽창과 단열 압축">
+  <div class="hd"><div class="t-eyebrow in">1. 단열 변화</div><div class="t-head in" style="--d:100">올라가면 팽창해서 식는다</div></div>
+  <svg class="abs no-nav" id="adSvg" viewBox="0 0 800 640" style="left:120px;top:280px;width:800px;height:640px" role="img" aria-label="고도에 따른 공기 덩어리의 크기와 기온"></svg>
+  <div class="abs" style="left:1000px;top:290px;width:800px">
+    <div class="panel no-nav">
+      <label class="ctl" for="adZ">공기 덩어리의 고도 <span class="v" id="adZv"></span><input type="range" id="adZ" min="0" max="3000" step="50" value="0"></label>
+      <div class="row" style="margin-top:30px;gap:40px">
+        <div><div class="t-cap mute">주변 기압</div><div class="num" style="font-size:54px;font-weight:600" id="adP"></div></div>
+        <div><div class="t-cap mute">공기 덩어리 기온</div><div class="num" style="font-size:54px;font-weight:600" id="adT"></div></div>
+      </div>
+    </div>
+    <div class="t-body" data-step="1" style="margin-top:34px"><b class="c-act">상승</b> → 기압 낮아짐 → 팽창 → 분자 운동 에너지가 팽창에 쓰임 → <b class="c-dew">기온 하강</b></div>
+    <div class="t-body" data-step="2" style="margin-top:20px"><b class="c-act">하강</b> → 기압 높아짐 → 압축 → <b class="c-env">기온 상승</b></div>
+    <div class="t-cap mute" data-step="3" style="margin-top:24px">주변과 열을 주고받지 않으므로 <b style="color:var(--fg)">단열</b> 변화라고 한다.</div>
+  </div>
+</section>
+
+<!-- 07 세 가지 감률 -->
+<section class="slide" id="s7" data-tile="black" data-sec="1. 단열 변화" data-title="세 가지 감률 10 · 5 · 2">
+  <div class="hd"><div class="t-eyebrow in">1. 단열 변화 · 1 km 올라갈 때</div><div class="t-head in" style="--d:100">꼭 기억할 세 숫자</div></div>
+  <div class="cards" style="top:330px;grid-template-columns:repeat(3,1fr)">
+    <div class="card" data-step="1"><div class="k c-dry">건조 단열 감률 $\Gamma_d$</div><div class="big num c-dry" style="margin-top:26px">10<small>℃/km</small></div><p>불포화 공기가 오르내릴 때</p></div>
+    <div class="card" data-step="2"><div class="k c-moist">습윤 단열 감률 $\Gamma_s$</div><div class="big num c-moist" style="margin-top:26px">5<small>℃/km</small></div><p>포화된 공기(구름 속)가 오를 때 · 평균값</p></div>
+    <div class="card" data-step="3"><div class="k c-dew">이슬점 감률</div><div class="big num c-dew" style="margin-top:26px">2<small>℃/km</small></div><p>불포화 공기가 오를 때 이슬점</p></div>
+  </div>
+  <div class="abs center t-lead" data-step="4" style="left:0;right:0;top:880px">구름 속에서는 왜 <b class="c-moist">덜</b> 식을까?</div>
+</section>
+
+<!-- 08 왜 덜 식고, 이슬점은 왜 내려갈까 -->
+<section class="slide" id="s8" data-tile="dark" data-sec="1. 단열 변화" data-title="숨은열과 이슬점 감률">
+  <div class="hd"><div class="t-eyebrow in">1. 단열 변화</div><div class="t-head in" style="--d:100">두 가지 ‘왜’</div></div>
+  <div class="cards" style="top:320px;grid-template-columns:1fr 1fr">
+    <div class="card" data-step="1"><div class="k c-moist">구름 속은 5 ℃/km</div><h4 style="margin-top:20px">응결하면서 <span class="blank" data-reveal="2" style="min-width:200px"><b>숨은열</b></span>을 내놓는다</h4><p>수증기가 물방울이 될 때 방출하는 열이 팽창 냉각을 일부 상쇄한다. 그래서 1 km에 10 ℃가 아니라 약 5 ℃만 식는다.</p></div>
+    <div class="card" data-step="3"><div class="k c-dew">이슬점도 2 ℃/km 내려간다</div><h4 style="margin-top:20px">부피가 커져 수증기압이 낮아진다</h4><p>같은 양의 수증기가 더 넓게 퍼지므로 응결이 시작되는 온도(이슬점)도 조금씩 낮아진다.</p></div>
+  </div>
+  <div class="abs center t-lead" data-step="4" style="left:0;right:0;top:860px">기온 10, 이슬점 2 → 둘의 간격은 1 km마다 <b class="c-act">8 ℃</b>씩 좁혀진다</div>
+</section>
+
+<!-- 09 응결 고도 식 -->
+<section class="slide" id="s9" data-tile="parchment" data-sec="1. 단열 변화" data-title="응결 고도 H = 125(T − Td)">
+  <div class="hd"><div class="t-eyebrow in">1. 단열 변화 · 응결 고도 (기온 35 ℃, 이슬점 27 ℃인 공기)</div><div class="t-head in" style="--d:100">기온과 이슬점이 같아지는 높이에서 구름이 생긴다</div></div>
+  <table class="dt abs" style="left:120px;top:330px;font-size:40px">
+    <thead><tr><th style="width:220px">고도</th><th style="width:250px">0 km</th><th style="width:250px">0.5 km</th><th style="width:250px">1 km</th></tr></thead>
+    <tbody>
+      <tr><td class="c-dry" style="font-weight:600">기온</td><td>35 ℃</td><td data-step="1">30 ℃</td><td data-step="2">25 ℃</td></tr>
+      <tr><td class="c-dew" style="font-weight:600">이슬점</td><td>27 ℃</td><td data-step="1">26 ℃</td><td data-step="2">25 ℃</td></tr>
+      <tr><td style="font-weight:600">차이</td><td>8 ℃</td><td data-step="1">4 ℃</td><td data-step="2"><b class="c-act">0 ℃ → 구름!</b></td></tr>
+    </tbody>
+  </table>
+  <div class="abs t-body" data-step="3" style="left:120px;top:690px;right:120px">기온은 1 km에 <b class="c-dry">10 ℃</b>, 이슬점은 <b class="c-dew">2 ℃</b> 내려가므로, 둘의 차이는 1 km마다 <b class="c-act">8 ℃</b>씩 줄어든다.</div>
+  <div class="abs t-body" data-step="4" style="left:120px;top:800px;right:120px">차이 1 ℃가 줄어드는 데 1000 ÷ 8 = <b>125 m</b> → 응결 고도 = 125 × (기온 − 이슬점) <span class="mute">[m]</span></div>
+  <div class="abs t-cap mute" data-step="4" style="left:120px;top:900px;right:120px">이 공기는 125 × 8 = 1000 m에서 구름이 생긴다. 교과서 식: $H = 125\,(T - T_d)$</div>
+</section>
+
+<!-- 10 응결 고도 계산기 -->
+<section class="slide" id="s10" data-tile="light" data-sec="1. 단열 변화" data-title="해 보기 — 응결 고도 계산기">
+  <div class="hd sm"><div class="t-eyebrow in">해 보기 · 교과서 그림 10</div><div class="t-head in" style="--d:100">기온과 이슬점이 만나는 곳에 구름이 생긴다</div></div>
+  <svg class="abs no-nav" id="lclSvg" viewBox="0 0 860 640" style="left:120px;top:270px;width:860px;height:640px" role="img" aria-label="기온선과 이슬점선이 만나는 응결 고도 그래프"></svg>
+  <div class="abs panel no-nav" style="left:1060px;top:280px;width:740px">
+    <label class="ctl" for="lT">지표 기온 $T$ <span class="v" id="lTv"></span><input type="range" id="lT" min="0" max="40" step="1" value="35"></label>
+    <label class="ctl" for="lTd">지표 이슬점 $T_d$ <span class="v" id="lTdv"></span><input type="range" id="lTd" min="0" max="40" step="1" value="27"></label>
+    <div style="margin-top:34px;padding-top:26px;border-top:1px solid var(--hl)">
+      <div class="t-cap mute">응결 고도</div>
+      <div class="num" style="font-size:80px;font-weight:600;letter-spacing:-.03em" id="lH"></div>
+      <div class="t-body" id="lInfo"></div>
+    </div>
+  </div>
+  <div class="abs t-cap mute" style="left:1060px;top:930px;width:740px">이슬점이 높을수록(습할수록) 구름 밑면은 낮아진다.</div>
+</section>
+
+<!-- 11 푄 opener -->
+<section class="slide" id="s11" data-tile="black" data-sec="2. 푄" data-title="2. 푄 — 산을 넘은 바람">
+  <svg class="full-svg" viewBox="0 0 1920 1080" aria-hidden="true">
+    <path d="M760 1080 L1150 640 L1340 470 L1520 660 L1920 1000 V1080Z" fill="#1d1d1f"/>
+    <path class="fin" style="--d:400" d="M820 860 C1000 760 1150 560 1340 520 C1520 560 1640 800 1880 900" fill="none" stroke="#2997ff" stroke-width="6" stroke-dasharray="4 18" stroke-linecap="round"/>
+  </svg>
+  <div class="abs" style="left:120px;top:300px">
+    <div class="t-eyebrow in"><b>2</b>교과서 95쪽 그림 11</div>
+    <div class="t-title in" style="--d:150;margin-top:20px">푄</div>
+    <div class="t-lead mute in" style="--d:300;margin-top:20px">습한 공기가 산을 넘으면<br>고온 건조한 바람이 된다</div>
+  </div>
+</section>
+
+<!-- 12 높새바람 -->
+<section class="slide" id="s12" data-tile="dark" data-sec="2. 푄" data-title="우리나라의 푄 — 높새바람">
+  <div class="hd"><div class="t-eyebrow in">2. 푄 · 우리나라</div><div class="t-head in" style="--d:100">높새바람: 늦봄~초여름의 북동풍</div></div>
+  <svg class="abs" viewBox="0 0 1680 560" style="left:120px;top:300px;width:1680px;height:560px" aria-label="태백산맥을 넘는 북동풍 단면도">
+    <rect x="0" y="0" width="1680" height="560" rx="22" fill="#141c24"/>
+    <rect x="1380" y="470" width="300" height="90" fill="#0a3a5c"/>
+    <text x="1530" y="525" text-anchor="middle" font-size="28" fill="#64D2FF">동해</text>
+    <path d="M0 470 L520 470 L700 330 L840 150 L980 330 L1180 470 L1380 470 L1380 560 L0 560Z" fill="#3a3a3c"/>
+    <text x="840" y="125" text-anchor="middle" font-size="28" fill="#a1a1a6">태백산맥</text>
+    <g data-step="1">
+      <path d="M1640 400 C1400 380 1150 330 960 200 C880 150 800 150 720 200" fill="none" stroke="#2997ff" stroke-width="7" stroke-dasharray="14 12"/>
+      <path d="M736 182 l-22 22 l30 4" fill="none" stroke="#2997ff" stroke-width="7"/>
+      <text x="1480" y="270" text-anchor="middle" font-size="30" font-weight="600" fill="#2997ff">차고 습한 북동풍</text>
+      <text x="1480" y="308" text-anchor="middle" font-size="24" fill="#a1a1a6">오호츠크해 고기압</text>
+      <g fill="#e5e5ea" stroke="#8e8e93" stroke-width="2"><circle cx="900" cy="230" r="44"/><circle cx="960" cy="260" r="50"/><circle cx="1030" cy="300" r="44"/><circle cx="1090" cy="340" r="36"/></g>
+      <g stroke="#64D2FF" stroke-width="4" stroke-linecap="round"><path d="M930 320 l-10 34"/><path d="M980 330 l-10 34"/><path d="M1030 360 l-10 34"/><path d="M1080 390 l-10 34"/></g>
+    </g>
+    <g data-step="2">
+      <text x="1280" y="455" text-anchor="middle" font-size="34" font-weight="600" fill="#64D2FF">영동 · 강릉</text>
+      <text x="1280" y="418" text-anchor="middle" font-size="26" fill="#a1a1a6">흐림 · 비 · 서늘</text>
+    </g>
+    <g data-step="3">
+      <path d="M720 200 C640 260 560 380 300 420" fill="none" stroke="#FF453A" stroke-width="7"/>
+      <path d="M318 404 l-22 18 l28 10" fill="none" stroke="#FF453A" stroke-width="7"/>
+      <text x="300" y="270" text-anchor="middle" font-size="34" font-weight="600" fill="#FF453A">영서 · 홍천 · 경기</text>
+      <text x="300" y="312" text-anchor="middle" font-size="26" fill="#a1a1a6">고온 건조 → 가뭄, 농작물 피해</text>
+    </g>
+  </svg>
+  <div class="abs t-cap mute" data-step="3" style="left:120px;top:900px;right:120px">‘높새’는 북동풍을 뜻하는 순우리말이다. 봄철 서풍이 반대로 넘어 영동에 부는 고온 건조 강풍은 <b style="color:var(--fg)">양간지풍</b>이다.</div>
+</section>
+
+<!-- 13 푄 실험실 -->
+<section class="slide" id="s13" data-tile="light" data-sec="2. 푄" data-title="푄 실험실">
+  <div class="hd sm"><div class="t-eyebrow in">2. 푄 · 실험실</div><div class="t-head in" style="--d:100">공기 덩어리를 산 너머로 보내 보자</div></div>
+  <svg class="abs no-nav" id="fSvg" viewBox="0 0 760 330" style="left:120px;top:250px;width:1100px;height:478px" role="img" aria-label="산을 넘는 공기 덩어리 단면도"></svg>
+  <div class="abs row no-nav" style="left:120px;top:748px;width:1100px;flex-wrap:nowrap">
+    <button class="btn primary" id="fPlay" style="min-width:170px">▶ 재생</button>
+    <button class="btn" id="fReset">처음으로</button>
+    <button class="btn" id="fBook">그림 11 값</button>
+    <label class="ctl" for="fPos" style="flex:1;margin:0 0 0 12px;font-size:22px">위치<input type="range" id="fPos" min="0" max="1000" step="1" value="0" style="margin-top:8px"></label>
+  </div>
+  <div class="abs no-nav" id="fReads" style="left:120px;top:836px;width:1100px;display:grid;grid-template-columns:repeat(4,1fr);gap:14px"></div>
+  <svg class="abs no-nav" id="fGraph" viewBox="0 0 320 345" style="left:1320px;top:240px;width:370px;height:399px" role="img" aria-label="고도와 기온 그래프"></svg>
+  <div class="abs panel no-nav" style="left:1270px;top:650px;width:530px;padding:18px 28px">
+    <label class="ctl" for="fT0" style="font-size:22px">출발 기온 <span class="v" id="fT0v" style="font-size:26px"></span><input type="range" id="fT0" min="0" max="35" step="1" value="20" style="margin-top:10px"></label>
+    <label class="ctl" for="fTd0" style="font-size:22px;margin-top:14px">출발 이슬점 <span class="v" id="fTd0v" style="font-size:26px"></span><input type="range" id="fTd0" min="0" max="35" step="1" value="16" style="margin-top:10px"></label>
+    <label class="ctl" for="fH" style="font-size:22px;margin-top:14px">산 높이 <span class="v" id="fHv" style="font-size:26px"></span><input type="range" id="fH" min="200" max="3000" step="100" value="1500" style="margin-top:10px"></label>
+  </div>
+</section>
+
+<!-- 14 숫자로 따라가기 -->
+<section class="slide" id="s14" data-tile="parchment" data-sec="2. 푄" data-title="숫자로 따라가기">
+  <div class="hd"><div class="t-eyebrow in">2. 푄 · 그림 11 (출발 20 ℃, 산 높이 1500 m)</div><div class="t-head in" style="--d:100">올라갈 때는 덜 식고, 내려올 때는 많이 데워진다</div></div>
+  <div class="cards" style="top:330px;grid-template-columns:1fr 1fr">
+    <div class="card" data-step="1"><div class="k c-act">올라갈 때 · 1.5 km</div>
+      <p data-step="2" style="color:var(--fg)">구름 없는 0.5 km: 1 km에 10 ℃ → <b>5 ℃</b> 식음</p>
+      <p data-step="3" style="color:var(--fg)">구름 속 1 km: 1 km에 5 ℃ → <b>5 ℃</b> 식음</p>
+      <div data-step="4" style="margin-top:24px;font-size:44px;font-weight:600">모두 <span class="c-act">10 ℃</span> 식음 → 정상 10 ℃</div></div>
+    <div class="card" data-step="5"><div class="k c-env">내려올 때 · 1.5 km</div>
+      <p data-step="6" style="color:var(--fg)">비가 내려 구름이 사라졌다 → 내내 1 km에 10 ℃</p>
+      <p data-step="6" style="color:var(--fg)">1.5 km × 10 ℃ → <b>15 ℃</b> 데워짐</p>
+      <div data-step="7" style="margin-top:24px;font-size:44px;font-weight:600">모두 <span class="c-env">15 ℃</span> 데워짐 → 25 ℃</div></div>
+  </div>
+  <div class="abs center t-lead" data-step="8" style="left:0;right:0;top:860px">10 ℃ 식고 15 ℃ 데워졌으니, 출발 때보다 <b class="c-env">5 ℃</b> 더 뜨겁다</div>
+</section>
+
+<!-- 16 왜 건조해질까 -->
+<section class="slide" id="s16" data-tile="light" data-sec="2. 푄" data-title="왜 더 건조해질까">
+  <div class="hd"><div class="t-eyebrow in">2. 푄 · 상대 습도</div><div class="t-head in" style="--d:100"><span class="num">78 %</span> → <span class="num c-env">47 %</span>, 두 가지 이유</div></div>
+  <div class="cards" style="top:330px;grid-template-columns:1fr 1fr">
+    <div class="card" data-step="1"><div class="k c-td">수증기가 줄었다</div><div class="big num c-td" style="margin-top:22px;font-size:96px">16 → 13<small>℃</small></div><p>이슬점이 낮아졌다. 수증기 일부가 비로 빠져나갔기 때문이다.</p></div>
+    <div class="card" data-step="2"><div class="k c-env">그릇이 커졌다</div><div class="big num c-env" style="margin-top:22px;font-size:96px">20 → 25<small>℃</small></div><p>기온이 올라 포화 수증기량이 커졌다. 같은 수증기라도 상대 습도는 낮아진다.</p></div>
+  </div>
+  <div class="abs center t-body mute" data-step="3" style="left:0;right:0;top:880px">그래서 풍하측에는 <b style="color:var(--fg)">고온 건조</b>한 바람이 분다.</div>
+</section>
+
+<!-- 17 오개념 -->
+<section class="slide" id="s17" data-tile="parchment" data-sec="2. 푄" data-title="오개념 바로잡기">
+  <div class="hd"><div class="t-eyebrow in">2. 푄 · 바로잡기</div><div class="t-head in" style="--d:100">이렇게 말하면 반만 맞다</div></div>
+  <div class="cards" style="top:320px;grid-template-columns:repeat(3,1fr)">
+    <div class="card" data-step="1"><div class="xo"><span class="x">✕</span><span>내려올 때 압축되니 따뜻해진다</span><span class="o" data-step="2">○</span><span data-step="2">올라갈 때도 같은 높이만큼 팽창했다. <b>오르내릴 때 감률이 다른 것</b>이 핵심</span></div></div>
+    <div class="card" data-step="3"><div class="xo"><span class="x">✕</span><span>바람그늘 쪽에는 원래 따뜻한 공기가 있었다</span><span class="o" data-step="4">○</span><span data-step="4">같은 공기 덩어리가 산을 넘으며 <b>데워진 것</b>이다</span></div></div>
+    <div class="card" data-step="5"><div class="xo"><span class="x">✕</span><span>낮은 산에서도 푄이 생긴다</span><span class="o" data-step="6">○</span><span data-step="6">산이 응결 고도보다 낮으면 구름이 없어 <b>변화가 0</b>이다</span></div></div>
+  </div>
+</section>
+
+<!-- 18 연습 1 -->
+<section class="slide" id="s18" data-tile="light" data-sec="2. 푄" data-title="연습 1 — 풍하측 기온 구하기">
+  <div class="hd"><div class="t-eyebrow in">2. 푄 · 연습 1</div><div class="t-head in" style="--d:100">해수면 24 ℃, 이슬점 20 ℃인 공기가<br>높이 2000 m 산을 넘는다</div></div>
+  <div class="abs t-body mute" style="left:120px;top:330px;right:120px">바람받이 쪽에서 응결한 물은 모두 비로 내렸다. 풍하측 해수면의 기온은?</div>
+  <div class="abs row no-nav" style="left:120px;top:430px"><span class="t-body">풍하측 기온</span><input type="number" id="ex1" step="0.5" aria-label="풍하측 기온"><span class="t-body">℃</span><button class="btn primary" id="ex1c">확인</button><span class="fb" id="ex1f"></span></div>
+  <div class="abs answer center" data-step="1" style="left:360px;right:360px;top:580px">
+    응결 고도 125 × 4 = 500 m, 이때 19 ℃<br>정상 19 − 5 × 1.5 = 11.5 ℃<br>풍하측 11.5 + 20 = <b class="c-env">31.5 ℃</b> &nbsp;<span class="mute">(이슬점 15.5 ℃)</span>
+  </div>
+</section>
+
+<!-- 19 연습 2 -->
+<section class="slide" id="s19" data-tile="light" data-sec="2. 푄" data-title="연습 2 — 더 건조한 공기라면">
+  <div class="hd"><div class="t-eyebrow in">2. 푄 · 연습 2</div><div class="t-head in" style="--d:100">같은 산(1500 m), 출발 기온 20 ℃는 같고<br>이슬점만 12 ℃로 낮다</div></div>
+  <div class="abs t-body mute" style="left:120px;top:330px;right:120px">풍하측 기온은 그림 11(25 ℃)보다 높을까, 낮을까?</div>
+  <div class="abs row no-nav" style="left:120px;top:430px"><button class="btn" data-a="h">더 높다</button><button class="btn" data-a="s">같다</button><button class="btn" data-a="l">더 낮다</button><span class="fb" id="ex2f"></span></div>
+  <div class="abs answer center" data-step="1" style="left:360px;right:360px;top:580px">
+    응결 고도 125 × 8 = 1000 m → 구름 속 구간 500 m<br>상승 폭 5 × 0.5 = 2.5 ℃ → 풍하측 <b class="c-env">22.5 ℃</b><br><span class="mute">습한 공기일수록 푄이 강하다.</span>
+  </div>
+</section>
+
+<!-- 20 세계의 푄 -->
+<section class="slide" id="s20" data-tile="graphite" data-sec="2. 푄" data-title="세계의 푄">
+  <div class="hd"><div class="t-eyebrow in">2. 푄 · 더 알아보기</div><div class="t-head in" style="--d:100">산이 있는 곳이면 어디든</div></div>
+  <div class="cards" style="top:320px;grid-template-columns:repeat(3,1fr)">
+    <div class="card" data-step="1"><div class="k c-act">알프스</div><h4 style="margin-top:18px">푄 Föhn</h4><p>알프스 북쪽 사면에 부는 따뜻하고 건조한 바람의 이름이 현상의 이름이 되었다.</p></div>
+    <div class="card" data-step="2"><div class="k c-act">로키산맥</div><h4 style="margin-top:18px">치누크</h4><p>‘눈 먹는 바람’. 1972년 1월 미국 몬태나주 로마에서 24시간 동안 <b style="color:var(--fg)">약 −48 ℃ → 9 ℃</b>.</p></div>
+    <div class="card" data-step="3"><div class="k c-act">강원 영동</div><h4 style="margin-top:18px">양간지풍</h4><p>봄철 양양~간성 사이 고온 건조 강풍. 2005년 양양, 2019년 고성·속초 산불을 키웠다.</p></div>
+  </div>
+</section>
+
+<!-- 21 안정도 opener -->
+<section class="slide" id="s21" data-tile="black" data-sec="3. 대기 안정도" data-title="3. 대기 안정도">
+  <div class="abs" style="left:120px;top:380px">
+    <div class="t-eyebrow in"><b>3</b>교과서 96~97쪽</div>
+    <div class="t-title in" style="--d:150;margin-top:20px">대기 안정도</div>
+    <div class="t-lead mute in" style="--d:300;margin-top:20px">밀어 올린 공기는 돌아올까, 계속 오를까</div>
+  </div>
+</section>
+
+<!-- 22 공 비유 -->
+<section class="slide" id="s22" data-tile="light" data-sec="3. 대기 안정도" data-title="안정과 불안정">
+  <div class="hd"><div class="t-eyebrow in">3. 대기 안정도 · 그림 12</div><div class="t-head in" style="--d:100">살짝 밀었을 때 어떻게 될까</div></div>
+  <svg class="abs no-nav" id="ballSvg" viewBox="0 0 1680 460" style="left:120px;top:290px;width:1680px;height:460px" role="img" aria-label="골짜기의 공과 언덕 위의 공"></svg>
+  <div class="abs row no-nav" style="left:120px;top:770px;width:820px;justify-content:center"><button class="btn primary" id="pushA">골짜기 공 밀기</button></div>
+  <div class="abs row no-nav" style="left:980px;top:770px;width:820px;justify-content:center"><button class="btn primary" id="pushB">언덕 공 밀기</button></div>
+  <div class="abs center t-body" data-step="1" style="left:120px;width:820px;top:870px"><b class="c-dew">안정</b> · 제자리로 돌아온다</div>
+  <div class="abs center t-body" data-step="1" style="left:980px;width:820px;top:870px"><b class="c-env">불안정</b> · 계속 멀어진다</div>
+  <div class="abs center t-cap mute" data-step="2" style="left:0;right:0;top:952px">공은 지형이 결정하고, 공기 덩어리는 <b style="color:var(--fg)">주변 공기와의 온도 차</b>가 결정한다.<br>주변보다 차가우면 무거워 돌아오고, 주변보다 따뜻하면 가벼워 계속 오른다.</div>
+</section>
+
+<!-- 23 안정도 실험실 -->
+<section class="slide" id="s23" data-tile="light" data-sec="3. 대기 안정도" data-title="안정도 실험실">
+  <div class="hd sm"><div class="t-eyebrow in">3. 대기 안정도 · 실험실</div><div class="t-head in" style="--d:100">지표의 공기를 들어 올리면 주변보다 따뜻할까?</div></div>
+  <svg class="abs no-nav" id="stSvg" viewBox="0 0 440 330" style="left:120px;top:250px;width:960px;height:720px" role="img" aria-label="주변 기온과 공기 덩어리 기온 비교 그래프"></svg>
+  <div class="abs no-nav" style="left:1140px;top:260px;width:660px">
+    <div class="row" id="presets"><button class="btn" data-p="13">그림 13</button><button class="btn" data-p="15">그림 15</button><button class="btn" data-p="14">그림 14</button></div>
+    <div class="panel" style="margin-top:22px;padding:26px 34px">
+      <label class="ctl" for="sG" style="font-size:26px">주변 기온 감률 <span class="v" id="sGv"></span><input type="range" id="sG" min="0" max="14" step="0.5" value="8"></label>
+      <label class="ctl" for="sT" style="font-size:26px;margin-top:18px">지표 기온 <span class="v" id="sTv"></span><input type="range" id="sT" min="10" max="35" step="1" value="35"></label>
+      <label class="ctl" for="sL" style="font-size:26px;margin-top:18px">응결 고도 <span class="v" id="sLv"></span><input type="range" id="sL" min="0" max="4" step="0.5" value="2"></label>
+    </div>
+    <div id="sOut" style="margin-top:24px" aria-live="polite"></div>
+    <div class="legend" style="margin-top:18px"><span><i style="border-color:var(--env)"></i>주변 기온</span><span><i style="border-color:var(--dry)"></i>공기 덩어리(건조)</span><span><i style="border-color:var(--moist)"></i>공기 덩어리(습윤)</span></div>
+  </div>
+</section>
+
+<!-- 24 세 가지 안정도 -->
+<section class="slide" id="s24" data-tile="parchment" data-sec="3. 대기 안정도" data-title="세 가지 안정도와 구름">
+  <div class="hd"><div class="t-eyebrow in">3. 대기 안정도 · 정리</div><div class="t-head in" style="--d:100">기온 감률 하나로 판정한다</div></div>
+  <div class="cards" style="top:320px;grid-template-columns:repeat(3,1fr)">
+    <div class="card" data-step="1"><div class="k c-dew">절대 안정</div><div style="font-size:48px;margin-top:22px">$\Gamma < \Gamma_s$</div><p>포화되어도 주변보다 차갑다. 연직 운동이 약해 <b style="color:var(--fg)">층운형</b> 구름.</p></div>
+    <div class="card" data-step="2"><div class="k" style="color:var(--mid)">조건부 불안정</div><div style="font-size:48px;margin-top:22px">$\Gamma_s < \Gamma < \Gamma_d$</div><p>불포화면 안정, 포화되면 불안정. 구름이 생긴 뒤 어느 높이부터 <b style="color:var(--fg)">스스로 상승</b>.</p></div>
+    <div class="card" data-step="3"><div class="k c-env">절대 불안정</div><div style="font-size:48px;margin-top:22px">$\Gamma > \Gamma_d$</div><p>언제나 주변보다 따뜻하다. <b style="color:var(--fg)">적운형</b> 구름이 높게 발달.</p></div>
+  </div>
+  <div class="abs center t-cap mute" data-step="4" style="left:0;right:0;top:880px">$\Gamma$: 주변 기층의 기온 감률, $\Gamma_d = 10$ ℃/km, $\Gamma_s \approx 5$ ℃/km</div>
+</section>
+
+<!-- 25 탐구 opener -->
+<section class="slide" id="s25" data-tile="black" data-sec="탐구활동" data-title="탐구활동 — 단열선도로 안정도 해석하기">
+  <div class="abs" style="left:120px;top:300px;right:120px">
+    <div class="t-eyebrow in"><b>탐구활동</b>교과서 98~99쪽 · 자료 분석 · 과학적 사고 · 결론 도출</div>
+    <div class="t-head in" style="--d:150;margin-top:24px;font-size:80px">단열선도를 이용하여<br>대기 안정도 해석하기</div>
+    <div class="t-body mute in" style="--d:300;margin-top:40px"><b style="color:var(--fg)">목표</b> 관측된 연직 기온 분포를 단열선도에 기입하여 대기 안정도 등을 해석할 수 있다.</div>
+  </div>
+</section>
+
+<!-- 26 탐구하기 1 -->
+<section class="slide" id="s26" data-tile="light" data-sec="탐구활동" data-title="탐구하기 1 — 기온과 이슬점의 차">
+  <div class="hd sm"><div class="t-eyebrow in">탐구하기 1</div><div class="t-head in" style="--d:100;font-size:46px">기온과 이슬점의 차이를 구하고, 상대 습도가 가장 높은 기층을 찾는다</div></div>
+  <div class="abs no-nav" style="left:120px;top:300px">
+    <table class="dt" id="obsT"><thead><tr><th>고도(km)</th><th>기온(℃)</th><th>이슬점(℃)</th><th>기온 − 이슬점(℃)</th></tr></thead><tbody></tbody></table>
+  </div>
+  <div class="abs no-nav" style="left:1180px;top:310px;width:620px">
+    <div class="row"><button class="btn primary" id="dChk">채점</button><button class="btn" id="dAns">정답 보기</button><button class="btn" id="dClr">지우기</button></div>
+    <div class="fb" id="dFb" style="margin-top:30px"></div>
+  </div>
+</section>
+
+<!-- 27 탐구하기 2 -->
+<section class="slide" id="s27" data-tile="light" data-sec="탐구활동" data-title="탐구하기 2 — 단열선도의 선">
+  <div class="hd sm"><div class="t-eyebrow in">탐구하기 2</div><div class="t-head in" style="--d:100">단열선도에 그려져 있는 선들이 각각 무엇을 가리키는지 확인한다</div></div>
+  <svg class="abs" id="lineSvg" viewBox="0 0 640 720" style="left:120px;top:290px;width:620px;height:698px" role="img" aria-label="빈 단열선도"></svg>
+  <div class="abs no-nav" style="left:860px;top:330px;width:940px">
+    <table class="dt" style="width:100%">
+      <thead><tr><th>선</th><th>1 km 오를 때</th><th>이름</th></tr></thead>
+      <tbody>
+        <tr><td><svg width="70" height="16" aria-hidden="true"><line x1="0" y1="8" x2="70" y2="8" stroke="var(--dry)" stroke-width="5"/></svg></td><td>10 ℃ 감소</td><td><select id="ln0" aria-label="주황 선 이름"><option value="">선택</option><option value="d">건조 단열선</option><option value="m">습윤 단열선</option><option value="w">이슬점 감률선</option></select></td></tr>
+        <tr><td><svg width="70" height="16" aria-hidden="true"><line x1="0" y1="8" x2="70" y2="8" stroke="var(--moist)" stroke-width="5"/></svg></td><td>5 ℃ 감소</td><td><select id="ln1" aria-label="초록 선 이름"><option value="">선택</option><option value="d">건조 단열선</option><option value="m">습윤 단열선</option><option value="w">이슬점 감률선</option></select></td></tr>
+        <tr><td><svg width="70" height="16" aria-hidden="true"><line x1="0" y1="8" x2="70" y2="8" stroke="var(--dew)" stroke-width="5" stroke-dasharray="4 5"/></svg></td><td>2 ℃ 감소</td><td><select id="ln2" aria-label="파란 점선 이름"><option value="">선택</option><option value="d">건조 단열선</option><option value="m">습윤 단열선</option><option value="w">이슬점 감률선</option></select></td></tr>
+      </tbody>
+    </table>
+    <div class="fb" id="lnFb" style="margin-top:28px"></div>
+    <div class="t-cap mute" data-step="1" style="margin-top:20px">기온이 많이 변하는 선일수록 <b style="color:var(--fg)">눕고</b>, 적게 변하는 선일수록 <b style="color:var(--fg)">선다</b>.</div>
+  </div>
+</section>
+
+<!-- 28 탐구하기 3 -->
+<section class="slide" id="s28" data-tile="light" data-sec="탐구활동" data-title="탐구하기 3 — 단열선도에 기입">
+  <div class="hd sm"><div class="t-eyebrow in">탐구하기 3</div><div class="t-head in" style="--d:100">관측 기온과 이슬점을 표시하고 선으로 연결한다</div></div>
+  <svg class="abs no-nav" id="dSvg" viewBox="0 0 640 720" style="left:120px;top:262px;width:700px;height:788px;cursor:crosshair" role="img" aria-label="단열선도. 가로축 기온 −60~30 ℃, 세로축 고도 0~13 km"></svg>
+  <div class="abs no-nav" style="left:900px;top:280px;width:900px">
+    <div class="panel t-body" id="pTarget" style="padding:22px 30px"></div>
+    <div style="display:flex;gap:30px;margin-top:20px;align-items:flex-start">
+      <table class="dt" id="refT" style="font-size:24px"><thead><tr><th>고도</th><th>기온</th><th>이슬점</th></tr></thead><tbody></tbody></table>
+      <div style="flex:1;display:grid;gap:14px">
+        <button class="btn" id="pNext">다음 점 자동 기입</button>
+        <button class="btn" id="pAll">모두 기입</button>
+        <button class="btn" id="pReset">초기화</button>
+        <div class="fb" id="pFb" style="font-size:24px"></div>
+      </div>
+    </div>
+    <div class="legend" style="margin-top:16px"><span><i style="border-color:var(--env)"></i>관측 기온</span><span><i style="border-color:var(--td)"></i>관측 이슬점</span></div>
+  </div>
+</section>
+
+<!-- 29 탐구하기 4 -->
+<section class="slide" id="s29" data-tile="light" data-sec="탐구활동" data-title="탐구하기 4 — 기층별 안정도">
+  <div class="hd sm"><div class="t-eyebrow in">탐구하기 4</div><div class="t-head in" style="--d:100">각 층의 기온 감률로 안정도를 판단한다</div></div>
+  <div class="abs no-nav" style="left:120px;top:262px">
+    <table class="dt" id="stabT" style="font-size:27px"><thead><tr><th>기층(km)</th><th>$\Gamma$ (℃/km)</th><th>안정도</th></tr></thead><tbody></tbody></table>
+  </div>
+  <div class="abs no-nav" style="left:1080px;top:280px;width:720px">
+    <div class="panel t-cap" style="padding:22px 30px"><div>$\Gamma = \dfrac{\text{아래층 기온} - \text{위층 기온}}{\text{두께}}$</div><div style="margin-top:10px">5와 10을 기준으로 비교한다.</div></div>
+    <div class="row" style="margin-top:24px"><button class="btn primary" id="sChk">채점</button><button class="btn" id="sShowG">$\Gamma$ 보기</button><button class="btn" id="sAns">정답 보기</button></div>
+    <div class="fb" id="sFb" style="margin-top:24px"></div>
+  </div>
+</section>
+
+<!-- 30 정리하기 1 -->
+<section class="slide" id="s30" data-tile="parchment" data-sec="탐구활동" data-title="정리하기 1 — 기온 감률 비교">
+  <div class="hd"><div class="t-eyebrow in">정리하기 1</div><div class="t-head in" style="--d:100">안정한 기층과 불안정한 기층의<br>기온 감률은 어떻게 다를까?</div></div>
+  <div class="cards" style="top:420px;grid-template-columns:repeat(3,1fr)">
+    <div class="card" data-step="1"><div class="k c-dew">안정</div><h4 style="margin-top:16px">감률이 작다</h4><p>0~0.5, 4~5.5 km는 역전층, 5.5~7.5 km는 등온층</p></div>
+    <div class="card" data-step="2"><div class="k" style="color:var(--mid)">조건부 불안정</div><h4 style="margin-top:16px">5와 10 사이</h4><p>0.5~1, 9.5~12 km</p></div>
+    <div class="card" data-step="3"><div class="k c-env">절대 불안정</div><h4 style="margin-top:16px">감률이 크다</h4><p>1.5~4, 7.5~9.5 km (10 ℃/km 초과)</p></div>
+  </div>
+</section>
+
+<!-- 31 정리하기 2 -->
+<section class="slide" id="s31" data-tile="light" data-sec="탐구활동" data-title="정리하기 2 — 강제 상승">
+  <div class="hd sm"><div class="t-eyebrow in">정리하기 2</div><div class="t-head in" style="--d:100">지상 공기(25 ℃, 이슬점 22 ℃)를 강제로 올리면?</div></div>
+  <svg class="abs" id="liftSvg" viewBox="0 0 640 720" style="left:120px;top:270px;width:640px;height:720px" role="img" aria-label="단열선도 위 공기 덩어리 상승 경로"></svg>
+  <div class="abs t-body" style="left:860px;top:300px;width:940px;display:grid;gap:26px">
+    <div data-step="1"><b class="c-dry">① 응결 고도</b> 125 × 3 = <span class="blank" data-reveal="2"><b>375 m</b></span> 까지 10 ℃/km</div>
+    <div data-step="3"><b class="c-moist">② 그 위</b> 5 ℃/km로 식으며 오른다. 1.7 km까지는 주변보다 <b class="c-dew">차가워</b> 외부 힘이 필요하다.</div>
+    <div data-step="4"><b class="c-env">③ 약 1.7 km</b>부터 주변보다 따뜻해져 <b>스스로 상승</b>한다.</div>
+    <div data-step="5"><b class="c-act">④ 약 5.5 km</b> 역전층에서 주변과 같아져 상승이 멈춘다.</div>
+    <div class="panel" data-step="6">구름 밑면 약 0.4 km, 꼭대기 약 5.5 km의 <b>두꺼운 적운형 구름</b>과 소나기를 예상할 수 있다.</div>
+  </div>
+</section>
+
+<!-- 32 정리하기 3 -->
+<section class="slide" id="s32" data-tile="dark" data-sec="탐구활동" data-title="정리하기 3 — 새벽과 한낮">
+  <div class="hd"><div class="t-eyebrow in">정리하기 3</div><div class="t-head in" style="--d:100">우리 지역의 새벽과 한낮, 대기 안정도는?</div></div>
+  <div class="cards" style="top:330px;grid-template-columns:1fr 1fr">
+    <div class="card" data-step="1"><div class="k c-dew">맑은 날 새벽</div><h4 style="margin-top:18px">안정</h4><p>지표가 복사 냉각되어 지표 부근에 역전층이 생긴다. 안개가 끼고 연기가 옆으로 퍼진다.</p></div>
+    <div class="card" data-step="2"><div class="k c-env">한낮</div><h4 style="margin-top:18px">불안정해지기 쉽다</h4><p>지표가 가열되어 아래층 기온 감률이 커진다. 적운이 생기고 오후에 소나기가 오기도 한다.</p></div>
+  </div>
+  <div class="abs center t-cap mute" data-step="3" style="left:0;right:0;top:880px">탐구 자료의 0~0.5 km 역전층은 아침 관측의 특징으로 볼 수 있다.</div>
+</section>
+
+<!-- 33 출구 퀴즈 -->
+<section class="slide" id="s33" data-tile="light" data-sec="정리" data-title="출구 질문 1">
+  <div class="hd"><div class="t-eyebrow in">정리 · 출구 질문 1 / 3</div><div class="t-head in" style="--d:100">상승한 공기 덩어리가 주변보다 차가워<br>제자리로 돌아간다. 이 대기는?</div></div>
+  <div class="abs no-nav center" style="left:120px;right:120px;top:520px"><div class="row quiz" data-q="a" style="justify-content:center"><button class="btn" data-v="a">절대 안정</button><button class="btn" data-v="c">조건부 불안정</button><button class="btn" data-v="u">절대 불안정</button></div><div class="fb" style="margin-top:40px"></div></div>
+</section>
+<section class="slide" id="s33b" data-tile="light" data-sec="정리" data-title="출구 질문 2">
+  <div class="hd"><div class="t-eyebrow in">정리 · 출구 질문 2 / 3</div><div class="t-head in" style="--d:100">푄으로 풍하측이 고온 건조해지는<br>가장 중요한 조건은?</div></div>
+  <div class="abs no-nav center" style="left:120px;right:120px;top:520px"><div class="row quiz" data-q="r" style="justify-content:center"><button class="btn" data-v="h">산이 매우 높다</button><button class="btn" data-v="r">바람받이에 비가 내린다</button><button class="btn" data-v="w">바람이 강하다</button></div><div class="fb" style="margin-top:40px"></div></div>
+</section>
+<section class="slide" id="s33c" data-tile="light" data-sec="정리" data-title="출구 질문 3">
+  <div class="hd"><div class="t-eyebrow in">정리 · 출구 질문 3 / 3</div><div class="t-head in" style="--d:100">지표 기온 30 ℃, 이슬점 22 ℃일 때<br>응결 고도는?</div></div>
+  <div class="abs no-nav center" style="left:120px;right:120px;top:520px"><div class="row quiz" data-q="k" style="justify-content:center"><button class="btn" data-v="s">500 m</button><button class="btn" data-v="k">1000 m</button><button class="btn" data-v="t">2000 m</button></div><div class="fb" style="margin-top:40px"></div></div>
+</section>
+
+<!-- 34 마무리 -->
+<section class="slide" id="s34" data-tile="black" data-sec="정리" data-title="마무리">
+  <div class="abs center" style="left:0;right:0;top:330px">
+    <div class="t-eyebrow in">오늘의 한 문장</div>
+    <div class="t-title in" style="--d:150;margin-top:30px">올라갈 때 덜 식고,<br>내려올 때 제대로 데워진다</div>
+    <div class="t-lead mute in" style="--d:350;margin-top:40px">그 차이를 만드는 것은 <b class="c-moist">숨은열</b>과 <b class="c-dew">비</b></div>
+  </div>
+</section>
+
+</div></div>
+
+<div id="bar"></div>
+<div id="notes" aria-live="polite"></div>
+<div id="blackout"></div>
+<div class="overlay" id="ov"><h3 id="ovT">전체 보기</h3><div id="grid"></div></div>
+<div class="overlay" id="help"><h3>단축키</h3><table>
+<tr><td><kbd>→</kbd> <kbd>스페이스</kbd> 아래 ▶ 버튼</td><td>다음 단계 / 다음 장</td></tr>
+<tr><td><kbd>←</kbd> 아래 ◀ 버튼</td><td>이전</td></tr>
+<tr><td><kbd>O</kbd></td><td>전체 보기(목차)</td></tr>
+<tr><td><kbd>T</kbd></td><td>대본 보기</td></tr>
+<tr><td><kbd>R</kbd></td><td>이 장 다시 보기</td></tr>
+<tr><td><kbd>F</kbd></td><td>전체 화면</td></tr>
+<tr><td><kbd>P</kbd> / <kbd>X</kbd></td><td>판서 펜 켜기·끄기 / 이 장 판서 지우기</td></tr>
+<tr><td><kbd>B</kbd> / <kbd>W</kbd></td><td>검은 화면 / 흰 화면</td></tr>
+<tr><td><kbd>D</kbd></td><td>자동 점검 (넘침, 수식 줄바꿈, 중복 id)</td></tr>
+<tr><td>숫자 + <kbd>Enter</kbd></td><td>해당 장으로 이동</td></tr>
+<tr><td><kbd>Ctrl</kbd>+<kbd>P</kbd></td><td>인쇄·PDF (모든 단계 펼침)</td></tr>
+</table><p style="margin-top:16px;font-size:14px;opacity:.7">H 또는 Esc로 닫기</p></div>
+<div class="overlay" id="audit"><h3>자동 점검</h3><ul id="auditList"></ul></div>
+
+<div id="ui">
+  <button id="bPen" title="판서 펜(P)" aria-label="판서 펜"><svg viewBox="0 0 24 24"><path d="M4 20l4-1 11-11-3-3L5 16z"/></svg></button>
+  <button id="bR" title="이 장 다시 보기(R)" aria-label="이 장 다시 보기"><svg viewBox="0 0 24 24"><path d="M4 12a8 8 0 1 0 2.6-5.9M4 4v4h4"/></svg></button>
+  <button id="bT" title="대본 보기(T)" aria-label="대본 보기"><svg viewBox="0 0 24 24"><path d="M5 7h14M5 12h14M5 17h9"/></svg></button>
+  <button id="bO" title="전체 보기(O)" aria-label="전체 보기"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/></svg></button>
+  <button id="bP" title="이전" aria-label="이전"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
+  <span class="count" id="cnt" title="도움말(H)">1 / 34</span>
+  <button id="bN" title="다음" aria-label="다음"><svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button>
+  <button id="bF" title="전체 화면(F)" aria-label="전체 화면"><svg viewBox="0 0 24 24"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button>
+</div>
+
+<script>
+/* 대본 — 장 id별 (T 키) */
+const NOTES = {
+  s1: "오늘은 공기가 오르내릴 때 기온이 왜 변하는지, 그리고 그 원리로 **푄**과 **대기 안정도**를 설명합니다.",
+  s2: "늦봄 북동풍이 부는 날을 가정한 예시입니다. 산 하나를 사이에 두고 **13 ℃** 차이가 납니다. 이유를 먼저 짐작해 봅시다.",
+  s3: "손을 들게 하고 숫자를 눌러 집계합니다. ②와 ③이 모두 **반쪽 정답**이라는 점을 마지막에 공개합니다.",
+  s4: "오늘의 목표 세 가지입니다. 마지막에는 교과서 탐구활동을 그대로 진행합니다.",
+  s5: "첫 번째 주제, 단열 변화입니다.",
+  s6: "막대를 올려 공기 덩어리를 들어 올려 보세요. 주변 기압이 낮아져 **팽창**하고, 팽창에 에너지를 써서 **기온이 내려갑니다**. 내려오면 반대로 압축되어 데워집니다.",
+  s7: "세 숫자를 기억합니다. 불포화 공기는 **10**, 구름 속 공기는 **약 5**, 이슬점은 **2** ℃/km입니다. 5는 평균값이고 실제로는 온도에 따라 달라집니다.",
+  s8: "구름 속에서 덜 식는 이유는 응결할 때 나오는 **숨은열** 때문입니다. 이슬점이 내려가는 이유는 팽창으로 수증기압이 낮아지기 때문입니다. 그래서 기온과 이슬점의 간격은 1 km마다 **8 ℃**씩 좁혀집니다.",
+  s9: "35 ℃, 이슬점 27 ℃인 공기를 0.5 km씩 올려 봅니다. 기온은 5 ℃, 이슬점은 1 ℃씩 내려가 차이가 8 → 4 → 0이 됩니다. **차이가 0이 되는 1 km에서 구름**이 생깁니다. 식은 이 규칙을 정리한 것일 뿐이라는 점을 강조합니다.",
+  s10: "교과서 그림 10의 값(35 ℃, 이슬점 27 ℃)입니다. 이슬점을 올리면 구름 밑면이 내려오는 것을 보여 주세요.",
+  s11: "두 번째 주제, 푄입니다.",
+  s12: "우리나라의 대표적인 푄이 **높새바람**입니다. 영동은 비가 오고 서늘한데, 산을 넘은 영서는 고온 건조해집니다.",
+  s13: "재생을 누르고 단계마다 멈추며 기온, 이슬점, 상대 습도를 읽게 하세요. 끝에서 **+5 ℃, 78 % → 47 %**가 나옵니다. 산 높이를 400 m로 낮추면 구름이 생기지 않아 변화가 0입니다. 이슬점을 올리면(습한 공기) 구름이 낮게 생겨 더 뜨거워집니다.",
+  s14: "그림 11을 더하기 빼기로만 따라갑니다. 올라갈 때는 구름 속에서 덜 식어서 모두 **10 ℃** 식고, 내려올 때는 구름이 없어 **15 ℃** 데워집니다. 그래서 출발보다 **5 ℃** 뜨겁습니다.",
+  s16: "건조해지는 이유는 두 가지입니다. 수증기가 비로 빠져 **이슬점이 낮아졌고**, 기온이 올라 **포화 수증기량이 커졌습니다**.",
+  s17: "학생들이 자주 하는 설명을 바로잡습니다. 핵심은 **오르내릴 때 감률이 다르다**는 것과, 바람그늘의 따뜻한 공기가 **산을 넘은 바로 그 공기**라는 것입니다.",
+  s18: "정답은 31.5 ℃입니다. 응결 고도부터 구하게 하세요.",
+  s19: "응결 고도가 높아지면 구름 속 구간이 줄어 푄이 약해집니다. 정답은 22.5 ℃로 더 낮습니다.",
+  s20: "푄은 세계 곳곳에 있습니다. 치누크로 하루에 **57 ℃**가 오른 기록도 있습니다.",
+  s21: "세 번째 주제, 대기 안정도입니다.",
+  s22: "교과서 그림 12의 비유입니다. 이 장은 구름이 생기는 과정이 아니라 **안정과 불안정의 뜻**을 보여 줍니다. 골짜기의 공은 돌아오고 언덕 위의 공은 굴러갑니다. 공기에서는 **주변보다 차가운지, 따뜻한지**가 이 지형 역할을 합니다. 구름과의 관계는 다음 장 실험실에서 봅니다.",
+  s23: "그림 13, 15, 14 순서로 눌러 세 가지 경우를 보여 줍니다. 파란 영역은 공기 덩어리가 주변보다 차가운 곳, 붉은 영역은 따뜻한 곳입니다.",
+  s24: "판정 기준은 주변 기층의 기온 감률을 **5와 10**에 비교하는 것입니다.",
+  s25: "이제 교과서 98~99쪽 탐구활동을 그대로 진행합니다.",
+  s26: "음수끼리 빼는 계산에 주의시킵니다. 차가 가장 작은 **2 km**가 상대 습도가 가장 높습니다.",
+  s27: "선의 기울기로 이름을 맞힙니다. 1 km에 10 ℃가 변하는 선이 가장 누워 있습니다.",
+  s28: "학생이 나와 직접 점을 찍게 할 수 있습니다. 어려우면 ‘다음 점 자동 기입’을 씁니다.",
+  s29: "각 층의 Γ를 계산해 5, 10과 비교합니다. 1~1.5 km는 Γ가 정확히 10이라 경계값입니다. 조건부 불안정으로 답해도 이유를 말하면 인정하고 토론해 보세요.",
+  s30: "역전층과 등온층도 안정한 층이라는 점을 짚어 줍니다.",
+  s31: "지상 공기를 강제로 올리면 375 m에서 구름이 생기고, **약 1.7 km**부터 스스로 오르며, **약 5.5 km** 역전층에서 멈춥니다. 두꺼운 적운형 구름을 예상할 수 있습니다.",
+  s32: "새벽은 역전층으로 안정, 한낮은 지표 가열로 불안정해지기 쉽습니다.",
+  s33: "출구 질문 세 개를 한 장씩 풉니다. 손을 들게 한 뒤 버튼을 눌러 확인합니다.",
+  s33b: "푄의 핵심 조건은 바람받이 쪽에 내린 비입니다.",
+  s33c: "125 × (30 − 22) = 1000 m입니다.",
+  s34: "오늘의 한 문장으로 마무리합니다. 처음 질문, 강릉과 홍천의 13 ℃ 차이를 다시 물어보세요."
+};
+
+(function(){
+'use strict';
+const $ = s => document.querySelector(s), $$ = (s, r) => [...(r || document).querySelectorAll(s)];
+const NS = 'http://www.w3.org/2000/svg';
+const stage = $('#stage'), slides = $$('.slide');
+let cur = 0, step = 0, numBuf = '';
+const onShow = {}, onLeave = {};
+
+function el(tag, attrs, parent, text){ const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); if (text != null) e.textContent = text; if (parent) parent.appendChild(e); return e; }
+const es = T => 6.112 * Math.exp(17.67 * T / (T + 243.5));
+const rh = (T, Td) => Math.min(100, 100 * es(Td) / es(T));
+const f1 = v => (Math.round(v * 10) / 10).toFixed(1).replace(/\.0$/, '');
+const mn = v => String(v).replace('-', '−');   // 음수는 마이너스 기호로
+const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* ======================= 엔진 ======================= */
+$$('[data-step]').forEach(e => { if (e.namespaceURI !== NS) e.classList.add('rise'); });
+const maxStep = slides.map(s => Math.max(0, ...$$('[data-step],[data-reveal]', s).map(e => +(e.dataset.step || e.dataset.reveal))));
+function fit(){ const k = Math.min(innerWidth / 1920, innerHeight / 1080); stage.style.transform = `translate(-50%,-50%) scale(${k})`; }
+addEventListener('resize', fit); fit();
+
+function applyStep(){
+  const s = slides[cur];
+  $$('[data-step]', s).forEach(e => e.classList.toggle('on', +e.dataset.step <= step));
+  $$('[data-reveal]', s).forEach(e => e.classList.toggle('on', +e.dataset.reveal <= step));
+  for (let k = 1; k <= maxStep[cur]; k++) s.classList.toggle('st-' + k, k <= step);
+  $('#cnt').textContent = (cur + 1) + ' / ' + slides.length;
+  const total = maxStep.reduce((a, b) => a + b + 1, 0), done = maxStep.slice(0, cur).reduce((a, b) => a + b + 1, 0) + step;
+  $('#bar').style.width = (done / (total - 1) * 100) + '%';
+  history.replaceState(null, '', '#' + (cur + 1) + (step ? '.' + step : ''));
+}
+function go(i, st){
+  i = Math.max(0, Math.min(slides.length - 1, i));
+  const changed = i !== cur || !slides[cur].classList.contains('is-on');
+  if (changed) { const old = slides[cur]; old.classList.remove('is-on'); if (onLeave[old.id]) onLeave[old.id](); cur = i; }
+  step = Math.max(0, Math.min(maxStep[cur], st));
+  applyStep();
+  if (changed) { void slides[cur].offsetWidth; slides[cur].classList.add('is-on'); showNotes(); if (onShow[slides[cur].id]) onShow[slides[cur].id](); Pen.redraw(); }
+}
+const next = () => step < maxStep[cur] ? go(cur, step + 1) : cur < slides.length - 1 && go(cur + 1, 0);
+const prev = () => step > 0 ? go(cur, step - 1) : cur > 0 && go(cur - 1, maxStep[cur - 1]);
+function replay(){ const s = slides[cur]; s.classList.remove('is-on'); step = 0; applyStep(); void s.offsetWidth; s.classList.add('is-on'); if (onShow[s.id]) onShow[s.id](); }
+
+const md = t => t.replace(/\*\*(.+?)\*\*/g, '<b>$1</b>');
+function showNotes(){ $('#notes').innerHTML = md(NOTES[slides[cur].id] || ''); }
+function toggleNotes(){ $('#notes').classList.toggle('show'); $('#bT').classList.toggle('act', $('#notes').classList.contains('show')); }
+
+function buildGrid(){
+  $('#ovT').textContent = '전체 보기 · ' + slides.length + '장';
+  const g = $('#grid'); g.innerHTML = ''; let sec = null;
+  slides.forEach((s, i) => {
+    if (s.dataset.sec !== sec) { sec = s.dataset.sec; const h = document.createElement('div'); h.className = 'sec'; h.textContent = sec; g.append(h); }
+    const b = document.createElement('button'), lightTile = /light|parchment/.test(s.dataset.tile);
+    const bg = getComputedStyle(s).backgroundColor;
+    b.style.background = bg === 'rgb(0, 0, 0)' ? '#1d1d1f' : bg; b.style.color = lightTile ? '#1d1d1f' : '#f5f5f7';
+    b.className = i === cur ? 'cur' : '';
+    const n = document.createElement('small'); n.textContent = String(i + 1).padStart(2, '0');
+    const t = document.createElement('span'); t.textContent = s.dataset.title;
+    b.append(n, t); b.onclick = () => { closeOverlays(); go(i, 0); }; g.append(b);
+  });
+}
+function toggleOv(id){ const o = $(id), was = o.classList.contains('show'); closeOverlays(); if (!was) { if (id === '#ov') buildGrid(); if (id === '#audit') Audit.run(); o.classList.add('show'); } }
+function closeOverlays(){ $$('.overlay').forEach(o => o.classList.remove('show')); }
+const overlayOpen = () => !!document.querySelector('.overlay.show');
+function blackout(c){ const b = $('#blackout'); if (b.style.display === 'block' && b.dataset.c === c) b.style.display = 'none'; else { b.style.display = 'block'; b.style.background = c; b.dataset.c = c; } }
+function fullscreen(){ document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen && document.documentElement.requestFullscreen().catch(() => {}); }
+
+addEventListener('keydown', e => {
+  if (e.ctrlKey || e.metaKey || e.altKey) return;
+  const k = e.key, t = e.target;
+  if (k === 'Escape') { closeOverlays(); $('#blackout').style.display = 'none'; numBuf = ''; return; }
+  if (t.matches && t.matches('input,select,textarea')) return;
+  if (/^\d$/.test(k)) { numBuf += k; return; }
+  if (k === 'Enter' && numBuf) { closeOverlays(); go(+numBuf - 1, 0); numBuf = ''; return; }
+  numBuf = '';
+  if ((k === ' ' || k === 'Enter') && t.closest && t.closest('button')) return;  // 포커스된 버튼은 버튼 동작
+  if (overlayOpen() && !/^[oOhH?dD]$/.test(k)) return;
+  if (k === 'ArrowRight' || k === ' ' || k === 'PageDown' || k === 'Enter') { e.preventDefault(); next(); }
+  else if (k === 'ArrowLeft' || k === 'PageUp' || k === 'Backspace') { e.preventDefault(); prev(); }
+  else if (k === 'Home') go(0, 0);
+  else if (k === 'End') go(slides.length - 1, 0);
+  else if (/^r$/i.test(k)) replay();
+  else if (/^[tn]$/i.test(k)) toggleNotes();
+  else if (/^o$/i.test(k)) toggleOv('#ov');
+  else if (/^f$/i.test(k)) fullscreen();
+  else if (/^p$/i.test(k)) Pen.toggle();
+  else if (/^x$/i.test(k)) Pen.clear();
+  else if (/^b$/i.test(k)) blackout('#000');
+  else if (/^w$/i.test(k)) blackout('#fff');
+  else if (/^d$/i.test(k)) toggleOv('#audit');
+  else if (k === '?' || /^h$/i.test(k)) toggleOv('#help');
+});
+const vp = $('#viewport');
+const interactive = e => e.target.closest('.no-nav,button,input,select,label,a,table');
+let sx = null, sy = 0, swiped = false;
+// 화면 클릭으로는 넘기지 않는다(그래프 조작 중 실수 방지). 넘기기는 키보드와 아래 버튼으로.
+vp.addEventListener('touchstart', e => { if (e.touches.length === 1 && !Pen.on && !interactive(e)) { sx = e.touches[0].clientX; sy = e.touches[0].clientY; } else sx = null; }, {passive: true});
+vp.addEventListener('touchend', e => {
+  if (sx === null) return;
+  const dx = e.changedTouches[0].clientX - sx, dy = e.changedTouches[0].clientY - sy; sx = null;
+  if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.5) { swiped = true; dx < 0 ? next() : prev(); setTimeout(() => swiped = false, 400); }
+}, {passive: true});
+$('#blackout').onclick = () => $('#blackout').style.display = 'none';
+$('#bR').onclick = replay; $('#bT').onclick = toggleNotes; $('#bO').onclick = () => toggleOv('#ov');
+$('#bP').onclick = prev; $('#bN').onclick = next; $('#bF').onclick = fullscreen; $('#bPen').onclick = () => Pen.toggle();
+$('#cnt').onclick = () => toggleOv('#help');
+$$('.overlay').forEach(o => o.addEventListener('click', e => { if (e.target === o) closeOverlays(); }));
+let idleT; const ui = $('#ui');
+function wake(){ ui.classList.remove('idle'); clearTimeout(idleT); idleT = setTimeout(() => ui.classList.add('idle'), 3000); }
+['mousemove', 'touchstart', 'keydown'].forEach(ev => addEventListener(ev, wake, {passive: true})); wake();
+
+/* 판서 펜 (P 켜기·끄기, X 지우기) — 장마다 따로 저장 */
+const Pen = (function(){
+  const cv = $('#ink'), ctx = cv.getContext('2d'), ink = {}; let on = false, drawing = null;
+  const pos = e => { const r = cv.getBoundingClientRect(); return [(e.clientX - r.left) * 1920 / r.width, (e.clientY - r.top) * 1080 / r.height]; };
+  function redraw(){ ctx.clearRect(0, 0, 1920, 1080); (ink[cur] || []).forEach(st => { ctx.strokeStyle = st.c; ctx.lineWidth = st.w; ctx.lineCap = 'round'; ctx.lineJoin = 'round'; ctx.beginPath(); st.p.forEach((q, i) => i ? ctx.lineTo(q[0], q[1]) : ctx.moveTo(q[0], q[1])); ctx.stroke(); }); }
+  cv.addEventListener('pointerdown', e => { if (!on) return; drawing = {c: /light|parchment/.test(slides[cur].dataset.tile) ? '#D70015' : '#FFD60A', w: 6, p: [pos(e)]}; (ink[cur] = ink[cur] || []).push(drawing); cv.setPointerCapture(e.pointerId); });
+  cv.addEventListener('pointermove', e => { if (!drawing) return; drawing.p.push(pos(e)); redraw(); });
+  cv.addEventListener('pointerup', () => drawing = null);
+  return { get on(){ return on; }, toggle(){ on = !on; document.body.classList.toggle('pen-on', on); $('#bPen').classList.toggle('act', on); }, clear(){ ink[cur] = []; redraw(); }, redraw };
+})();
+
+/* 자동 점검 (D) — 넘침, 수식 줄바꿈, 중복 id */
+const Audit = { run(){
+  const out = [], keep = cur, ks = step;
+  const ids = {}; $$('[id]').forEach(e => { ids[e.id] = (ids[e.id] || 0) + 1; });
+  Object.keys(ids).filter(k => ids[k] > 1).forEach(k => out.push([-1, '중복 id', k]));
+  slides.forEach((s, i) => {
+    slides.forEach(x => x.classList.remove('is-on')); s.classList.add('is-on');
+    $$('[data-step],[data-reveal]', s).forEach(e => e.classList.add('on'));
+    const sr = s.getBoundingClientRect(), sc = sr.width / 1920;
+    $$('.hd,.card,.panel,.answer,table,svg.abs,.abs', s).forEach(e => { const r = e.getBoundingClientRect(); if (!r.width) return; if (r.bottom > sr.bottom + 1 || r.right > sr.right + 1) out.push([i, '화면 밖으로 넘침', (e.id || e.className.baseVal || e.className || e.tagName).toString().slice(0, 30)]); });
+    $$('.katex', s).forEach(e => { if (e.getClientRects().length > 1) out.push([i, '수식 줄바꿈', e.textContent.slice(0, 24)]); });
+    $$('.katex-error', s).forEach(e => out.push([i, 'KaTeX 오류', e.textContent.slice(0, 30)]));
+  });
+  slides.forEach(x => x.classList.remove('is-on')); cur = keep; slides[cur].classList.add('is-on'); step = ks; applyStep();
+  const ul = $('#auditList'); ul.innerHTML = out.length ? '' : '<li>문제 없음</li>';
+  out.forEach(([i, what, where]) => { const li = document.createElement('li'); if (i >= 0) { const b = document.createElement('button'); b.textContent = (i + 1) + '장'; b.onclick = () => { closeOverlays(); go(i, 0); }; li.append(b); } li.append(what + ' · ' + where); ul.append(li); });
+  window.__audit = out;
+}};
+
+/* ======================= 1장 표지 애니메이션 ======================= */
+(function(){
+  const svg = $('#titleSvg');
+  const mtn = x => { const d = x - 960; return Math.abs(d) >= 620 ? 0 : 330 * (0.5 + 0.5 * Math.cos(Math.PI * d / 620)); };
+  let d = 'M0 640'; for (let x = 0; x <= 1920; x += 10) d += ` L${x} ${640 - mtn(x)}`; d += ' L1920 1080 L0 1080Z';
+  el('path', {d, fill: '#1d1d1f'}, svg);
+  const g = el('g', {}, svg), c = el('circle', {r: 26, fill: '#64D2FF'}, g), t = el('text', {y: -44, 'text-anchor': 'middle', 'font-size': 34, 'font-weight': 600, fill: '#f5f5f7'}, g);
+  let s = 0, raf = null, last = 0;
+  // 그림 11 값: 20 ℃, 이슬점 16 ℃(응결 500 m), 산 1500 m
+  const Tat = (z, up) => up ? (z <= 500 ? 20 - z / 100 : 15 - (z - 500) / 200) : 10 + (1500 - z) / 100;
+  function frame(now){
+    const dt = Math.min(50, now - (last || now)); last = now;
+    if (!reduceMotion) s = (s + dt / 9000) % 1;
+    const x = 280 + 1360 * s, z = mtn(x) / 330 * 1500, up = x <= 960, T = Tat(z, up);
+    g.setAttribute('transform', `translate(${x.toFixed(1)} ${(640 - mtn(x) - 34).toFixed(1)})`);
+    const k = Math.max(0, Math.min(1, (T - 8) / 18)); c.setAttribute('fill', `hsl(${Math.round(205 - 200 * k)} 90% 60%)`);
+    t.textContent = f1(T) + ' ℃';
+    raf = requestAnimationFrame(frame);
+  }
+  onShow.s1 = () => { cancelAnimationFrame(raf); last = 0; raf = requestAnimationFrame(frame); };
+  onLeave.s1 = () => cancelAnimationFrame(raf);
+})();
+
+/* ======================= 투표 ======================= */
+$$('.poll').forEach(p => $$('button', p).forEach(b => b.addEventListener('click', () => { const n = b.querySelector('b'); n.textContent = +n.textContent + 1; })));
+
+/* ======================= 6장 단열 팽창 ======================= */
+(function(){
+  const svg = $('#adSvg'), z = $('#adZ');
+  function draw(){
+    const Z = +z.value, p = 1013.25 * Math.pow(1 - 2.2558e-5 * Z, 5.256), T = 20 - Z / 100;
+    svg.innerHTML = '';
+    el('rect', {x: 0, y: 0, width: 800, height: 640, rx: 22, fill: 'var(--panel)'}, svg);
+    // 고도 축
+    for (let m = 0; m <= 3000; m += 1000) { const y = 590 - m * 0.17; el('line', {x1: 90, x2: 770, y1: y, y2: y, stroke: 'var(--grid)', 'stroke-width': 2}, svg); el('text', {x: 76, y: y + 9, 'text-anchor': 'end', 'font-size': 26, fill: 'var(--t2)'}, svg, m / 1000 + ' km'); }
+    // 공기 밀도 점 (아래로 갈수록 빽빽)
+    let seed = 7; const rnd = () => (seed = (seed * 9301 + 49297) % 233280) / 233280;
+    for (let i = 0; i < 260; i++) { const zz = -8000 * Math.log(1 - rnd() * (1 - Math.exp(-3000 / 8000))); el('circle', {cx: 130 + rnd() * 200, cy: 590 - zz * 0.17, r: 3.2, fill: 'var(--dew)', opacity: .55}, svg); }
+    el('text', {x: 230, y: 628, 'text-anchor': 'middle', 'font-size': 24, fill: 'var(--t2)'}, svg, '공기 밀도');
+    // 공기 덩어리
+    const y = 590 - Z * 0.17, r = 48 * Math.pow(1013.25 / p, 1 / 3.5);
+    const k = Math.max(0, Math.min(1, (T - 5) / 18));
+    el('circle', {cx: 560, cy: y - r, r, fill: `hsl(${Math.round(205 - 200 * k)} 85% 55%)`, opacity: .85, stroke: 'var(--fg)', 'stroke-width': 2.5}, svg);
+    el('text', {x: 560 + r + 18, y: y - r + 12, 'font-size': 34, 'font-weight': 700, fill: 'var(--fg)'}, svg, mn(f1(T)) + ' ℃');
+    $('#adZv').textContent = Z + ' m'; $('#adP').textContent = Math.round(p) + ' hPa'; $('#adT').textContent = f1(T) + ' ℃';
+  }
+  z.addEventListener('input', draw); onShow.s6 = draw;
+})();
+
+/* ======================= 10장 응결 고도 계산기 ======================= */
+(function(){
+  const svg = $('#lclSvg'), iT = $('#lT'), iTd = $('#lTd');
+  const X = t => 110 + (t - 0) / 40 * 660, Y = z => 580 - z / 3000 * 510;
+  function draw(){
+    let T = +iT.value, Td = +iTd.value; if (Td > T) { Td = T; iTd.value = T; }
+    const H = 125 * (T - Td), TL = T - H / 100;
+    svg.innerHTML = '';
+    for (let t = 0; t <= 40; t += 5) { el('line', {x1: X(t), x2: X(t), y1: Y(3000), y2: Y(0), stroke: 'var(--grid)', 'stroke-width': 2}, svg); el('text', {x: X(t), y: 618, 'text-anchor': 'middle', 'font-size': 24, fill: 'var(--t2)'}, svg, t); }
+    for (let m = 0; m <= 3000; m += 500) { el('line', {x1: X(0), x2: X(40), y1: Y(m), y2: Y(m), stroke: 'var(--grid)', 'stroke-width': 2}, svg); el('text', {x: 96, y: Y(m) + 8, 'text-anchor': 'end', 'font-size': 24, fill: 'var(--t2)'}, svg, m); }
+    el('text', {x: X(40), y: Y(3000) - 14, 'text-anchor': 'end', 'font-size': 24, fill: 'var(--t2)'}, svg, '기온(℃)');
+    el('text', {x: 20, y: 30, 'font-size': 24, fill: 'var(--t2)'}, svg, '고도(m)');
+    const top = Math.min(3000, H);
+    el('line', {x1: X(T), y1: Y(0), x2: X(T - top / 100), y2: Y(top), stroke: 'var(--dry)', 'stroke-width': 6}, svg);
+    el('line', {x1: X(Td), y1: Y(0), x2: X(Td - top / 500), y2: Y(top), stroke: 'var(--dew)', 'stroke-width': 6, 'stroke-dasharray': '10 8'}, svg);
+    if (H <= 3000) {
+      el('line', {x1: X(TL), y1: Y(H), x2: X(TL - (3000 - H) / 200), y2: Y(3000), stroke: 'var(--moist)', 'stroke-width': 6}, svg);
+      el('line', {x1: X(0), x2: X(40), y1: Y(H), y2: Y(H), stroke: 'var(--act)', 'stroke-width': 2.5, 'stroke-dasharray': '8 8'}, svg);
+      [[0, 0, 40], [44, 10, 34], [-44, 12, 30], [84, 22, 24]].forEach(([dx, dy, r]) => el('circle', {cx: X(TL) + dx, cy: Y(H) - 30 - dy, r, fill: 'var(--panel)', stroke: 'var(--t3)', 'stroke-width': 2}, svg));
+      el('text', {x: X(40) - 6, y: Y(H) - 12, 'text-anchor': 'end', 'font-size': 26, 'font-weight': 700, fill: 'var(--act)'}, svg, '응결 고도');
+    }
+    el('text', {x: X(T) + 10, y: Y(0) - 14, 'font-size': 24, 'font-weight': 700, fill: 'var(--dry)'}, svg, '기온');
+    el('text', {x: X(Td) - 10, y: Y(0) - 14, 'text-anchor': 'end', 'font-size': 24, 'font-weight': 700, fill: 'var(--dew)'}, svg, '이슬점');
+    $('#lTv').textContent = T + ' ℃'; $('#lTdv').textContent = Td + ' ℃';
+    $('#lH').textContent = Math.round(H) + ' m';
+    $('#lInfo').innerHTML = `그 높이의 기온 = 이슬점 = <b>${f1(TL)} ℃</b><br><span class="mute">지표 상대 습도 약 ${Math.round(rh(T, Td))} %</span>`;
+  }
+  [iT, iTd].forEach(i => i.addEventListener('input', draw)); onShow.s10 = draw;
+})();
+
+/* ======================= 13장 푄 실험실 ======================= */
+const F = {T0: 20, Td0: 16, H: 1500, rain: true, pos: 0, playing: false};
+(function(){
+  const BASE = 300, SC = 0.08, CX = 380, HW = 300, X0 = 40, X1 = 720;
+  const fs = $('#fSvg'), fg = $('#fGraph');
+  const terrain = x => { const d = x - CX; return Math.abs(d) >= HW ? 0 : F.H * (0.5 + 0.5 * Math.cos(Math.PI * d / HW)); };
+  const L = () => 125 * (F.T0 - F.Td0);
+  function ascent(z){ const l = L(); if (z <= l) return {T: F.T0 - z / 100, Td: F.Td0 - z / 500}; const T = F.T0 - l / 100 - (z - l) / 200; return {T, Td: T}; }
+  function stateAt(s){
+    const x = X0 + (X1 - X0) * s, z = terrain(x);
+    if (x <= CX) return Object.assign({x, z, up: true}, ascent(z));
+    if (!F.rain || F.H <= L()) return Object.assign({x, z, up: false}, ascent(z));
+    const top = ascent(F.H), dz = F.H - z;
+    return {x, z, up: false, T: top.T + dz / 100, Td: top.T + dz / 500};
+  }
+  const xForZ = z => z >= F.H ? CX : CX - HW * Math.acos(Math.max(-1, Math.min(1, 2 * z / F.H - 1))) / Math.PI;
+  const tcol = T => { const k = Math.max(0, Math.min(1, (T + 5) / 40)); return `hsl(${Math.round(215 - 205 * k)} 80% 50%)`; };
+  function drawStatic(){
+    fs.innerHTML = '';
+    el('rect', {x: 0, y: 0, width: 760, height: 330, rx: 10, fill: 'var(--sky)'}, fs);
+    for (let m = 0; m <= 3000; m += 500) { const y = BASE - m * SC; el('line', {x1: 0, x2: 760, y1: y, y2: y, stroke: 'var(--grid)'}, fs); el('text', {x: 752, y: y - 4, 'text-anchor': 'end', 'font-size': 16, fill: 'var(--t2)'}, fs, m + ' m'); }
+    const l = L();
+    if (l < F.H) {
+      const y = BASE - l * SC;
+      el('line', {x1: 0, x2: F.rain ? CX : 760, y1: y, y2: y, stroke: 'var(--moist)', 'stroke-dasharray': '6 4', 'stroke-width': 1.5}, fs);
+      el('text', {x: xForZ(l) - 30, y: y + 17, 'text-anchor': 'end', 'font-size': 16, 'font-weight': 700, fill: 'var(--moist)'}, fs, '응결 고도 ' + Math.round(l) + ' m');
+    }
+    let d = `M0 ${BASE}`; for (let x = 0; x <= 760; x += 5) d += ` L${x} ${BASE - terrain(x) * SC}`; d += ` L760 ${BASE} L760 330 L0 330Z`;
+    el('path', {d, fill: 'var(--ground)', stroke: 'var(--ground-edge)', 'stroke-width': 1.5}, fs);
+    el('text', {x: 10, y: 322, 'font-size': 15, 'font-weight': 700, fill: 'var(--fg)'}, fs, '바람받이 쪽');
+    el('text', {x: 750, y: 322, 'text-anchor': 'end', 'font-size': 15, 'font-weight': 700, fill: 'var(--fg)'}, fs, '바람그늘 쪽');
+    [[16, 112], [16, 138]].forEach(([x, y]) => el('path', {d: `M${x} ${y} h44 m-8 -6 l8 6 l-8 6`, stroke: 'var(--act)', 'stroke-width': 2.5, fill: 'none'}, fs));
+    el('text', {x: 16, y: 100, 'font-size': 16, 'font-weight': 700, fill: 'var(--act)'}, fs, '바람');
+    if (l < F.H) {
+      const xa = xForZ(l);
+      const puffs = (x0, dir) => { for (let x = x0; dir < 0 ? x <= CX : x >= CX; x += dir < 0 ? 16 : -16) { const z = terrain(x), r = 14 + 10 * ((z - l) / (F.H - l + 1)); el('circle', {cx: x + (dir < 0 ? 8 : -8), cy: BASE - z * SC - r * 0.4, r, fill: 'var(--cloud)', stroke: 'var(--cloud-edge)'}, fs); } };
+      puffs(xa, -1); if (!F.rain) puffs(2 * CX - xa, 1);
+      if (F.rain) for (let x = xa + 6; x < CX - 6; x += 11) { const y0 = BASE - terrain(x) * SC + 8; el('line', {x1: x, y1: y0, x2: x - 6, y2: y0 + 22, stroke: 'var(--dew)', 'stroke-width': 1.6, 'stroke-linecap': 'round'}, fs); }
+    }
+    el('text', {id: 'fPhase', x: 380, y: 22, 'text-anchor': 'middle', 'font-size': 16, 'font-weight': 700, fill: 'var(--fg)'}, fs);
+    el('g', {id: 'fParcel'}, fs);
+  }
+  const gx = (T, lo, hi) => 52 + (T - lo) / (hi - lo) * 254;
+  function drawGraph(){
+    fg.innerHTML = '';
+    const FS = 19;
+    const pts = []; for (let i = 0; i <= 200; i++) pts.push(stateAt(i / 200));
+    let lo = Math.floor((Math.min(...pts.map(p => p.Td)) - 2) / 5) * 5, hi = Math.ceil((Math.max(...pts.map(p => p.T)) + 2) / 5) * 5;
+    F.lo = lo; F.hi = hi;
+    const stepT = hi - lo > 30 ? 10 : 5;
+    for (let t = lo; t <= hi; t += 5) { const x = gx(t, lo, hi); el('line', {x1: x, x2: x, y1: BASE - 3000 * SC, y2: BASE, stroke: 'var(--grid)'}, fg); if (((t % stepT) + stepT) % stepT === 0) el('text', {x, y: BASE + 17, 'text-anchor': 'middle', 'font-size': 16, fill: 'var(--t2)'}, fg, t); }
+    for (let m = 0; m <= 3000; m += 500) { const y = BASE - m * SC; el('line', {x1: 52, x2: 306, y1: y, y2: y, stroke: 'var(--grid)'}, fg); el('text', {x: 46, y: y + 4, 'text-anchor': 'end', 'font-size': 16, fill: 'var(--t2)'}, fg, m); }
+    el('text', {x: 306, y: BASE + 36, 'text-anchor': 'end', 'font-size': 16, fill: 'var(--t2)'}, fg, '기온(℃)');
+    el('text', {x: 4, y: 14, 'font-size': 16, fill: 'var(--t2)'}, fg, '고도(m)');
+    const path = (arr, key, color, dash) => { let d = ''; arr.forEach((p, i) => d += (i ? 'L' : 'M') + gx(p[key], lo, hi).toFixed(1) + ' ' + (BASE - p.z * SC).toFixed(1)); el('path', {d, fill: 'none', stroke: color, 'stroke-width': 2.8, 'stroke-dasharray': dash || 'none'}, fg); };
+    const up = pts.filter(p => p.up), dn = pts.filter(p => !p.up);
+    path(up, 'T', 'var(--act)'); path(dn, 'T', 'var(--env)'); path(up, 'Td', 'var(--td)', '4 4'); path(dn, 'Td', 'var(--td)', '1 4');
+    [['오를 때 기온', 'var(--act)'], ['내려올 때 기온', 'var(--env)'], ['이슬점(점선)', 'var(--td)']].forEach(([s, c], i) => el('text', {x: 312, y: 32 + i * 23, 'text-anchor': 'end', 'font-size': 16, 'font-weight': 700, fill: c, stroke: 'var(--c-white)', 'stroke-width': 4, 'paint-order': 'stroke'}, fg, s));
+    fg.querySelectorAll('text').forEach(t => t.setAttribute('font-size', FS));
+    el('g', {id: 'fMark'}, fg);
+  }
+  const card = (title, st, on, extra) => `<div class="read${on ? ' active' : ''}"><h5>${title}</h5><div class="bigv">${f1(st.T)}<small>℃</small>${extra || ''}</div><div class="sub">이슬점 ${f1(st.Td)} ℃<br>상대 습도 ${Math.round(rh(st.T, st.Td))} %</div></div>`;
+  function update(){
+    const st = stateAt(F.pos), y = BASE - st.z * SC - 16, g = $('#fParcel'); g.innerHTML = '';
+    el('circle', {cx: st.x, cy: y, r: 14, fill: tcol(st.T), stroke: 'var(--fg)', 'stroke-width': 1.5}, g);
+    const lx = Math.max(60, Math.min(700, st.x));
+    el('rect', {x: lx - 38, y: y - 48, width: 76, height: 26, rx: 6, fill: 'var(--panel)', stroke: 'var(--hl)'}, g);
+    el('text', {x: lx, y: y - 30, 'text-anchor': 'middle', 'font-size': 15, 'font-weight': 700, fill: 'var(--fg)'}, g, f1(st.T) + ' ℃');
+    const m = $('#fMark'); m.innerHTML = '';
+    el('circle', {cx: gx(st.T, F.lo, F.hi), cy: BASE - st.z * SC, r: 6, fill: tcol(st.T), stroke: 'var(--fg)'}, m);
+    el('circle', {cx: gx(st.Td, F.lo, F.hi), cy: BASE - st.z * SC, r: 4, fill: 'var(--td)'}, m);
+    const l = L();
+    let ph;
+    if (Math.abs(st.x - CX) < 8) ph = '③ 산 정상 · 가장 차갑고 수증기는 가장 적다';
+    else if (st.up) ph = (st.z > l || l === 0) ? '② 구름 속 상승 · 5 ℃/km (숨은열)' : '① 건조 단열 상승 · 10 ℃/km';
+    else ph = (!F.rain && st.z > l && F.H > l) ? '④ 구름 속 하강 · 5 ℃/km (물이 다시 증발)' : '④ 건조 단열 하강 · 10 ℃/km';
+    $('#fPhase').textContent = ph;
+    const s0 = stateAt(0), sT = stateAt(.5), s1 = stateAt(1), near = a => Math.abs(F.pos - a) < .04;
+    const lclPos = l < F.H ? (xForZ(l) - X0) / (X1 - X0) : -1, dT = s1.T - s0.T;
+    $('#fReads').innerHTML = card('출발 · 바람받이 기슭', s0, near(0)) +
+      (l < F.H ? card('응결 고도 · 구름 밑면', Object.assign({z: l}, ascent(l)), near(lclPos)) : `<div class="read"><h5>응결 고도</h5><div class="bigv">${Math.round(l)}<small>m</small></div><div class="sub">산보다 높아 구름이 없다</div></div>`) +
+      card('산 정상', sT, near(.5)) +
+      card('도착 · 바람그늘 기슭', s1, near(1), `<b style="color:var(--env);font-size:28px;margin-left:12px">${dT >= 0 ? '+' : ''}${f1(dT)}</b>`);
+    $('#fPos').value = Math.round(F.pos * 1000);
+  }
+  function sync(){
+    F.T0 = +$('#fT0').value; let td = +$('#fTd0').value; if (td > F.T0) { td = F.T0; $('#fTd0').value = td; } F.Td0 = td; F.H = +$('#fH').value;
+    $('#fT0v').textContent = F.T0 + ' ℃'; $('#fTd0v').textContent = F.Td0 + ' ℃'; $('#fHv').textContent = F.H + ' m';
+    drawStatic(); drawGraph(); update();
+  }
+  ['#fT0', '#fTd0', '#fH'].forEach(s => $(s).addEventListener('input', sync));
+  $('#fPos').addEventListener('input', e => { F.pos = e.target.value / 1000; stop(); update(); });
+  let raf = null, last = 0;
+  function stop(){ F.playing = false; cancelAnimationFrame(raf); raf = null; $('#fPlay').textContent = '▶ 재생'; }
+  function tick(t){ if (!F.playing) return; const dt = Math.min(50, t - (last || t)); last = t; F.pos = Math.min(1, F.pos + dt / 9000); update(); if (F.pos >= 1) { stop(); return; } raf = requestAnimationFrame(tick); }
+  $('#fPlay').onclick = () => { if (F.playing) { stop(); return; } if (F.pos >= 1) F.pos = 0; if (reduceMotion) { F.pos = Math.min(1, Math.round((F.pos + .25) * 4) / 4); update(); return; } F.playing = true; last = 0; $('#fPlay').textContent = '❚❚ 멈춤'; raf = requestAnimationFrame(tick); };
+  $('#fReset').onclick = () => { stop(); F.pos = 0; update(); };
+  $('#fBook').onclick = () => { stop(); $('#fT0').value = 20; $('#fTd0').value = 16; $('#fH').value = 1500; F.pos = 0; sync(); };
+  onShow.s13 = sync; onLeave.s13 = stop;
+  window.__foehn = {F, stateAt};
+})();
+
+/* ======================= 18·19장 연습 ======================= */
+$('#ex1c').onclick = () => { const v = parseFloat($('#ex1').value), f = $('#ex1f'), i = $('#ex1'); i.classList.remove('ok', 'bad');
+  if (isNaN(v)) { f.className = 'fb bad'; f.textContent = '숫자를 입력하세요.'; return; }
+  if (Math.abs(v - 31.5) < 0.01) { i.classList.add('ok'); f.className = 'fb ok'; f.textContent = '정답'; } else { i.classList.add('bad'); f.className = 'fb bad'; f.textContent = '응결 고도부터 다시 구해 보세요.'; } };
+$$('#s19 [data-a]').forEach(b => b.onclick = () => { const ok = b.dataset.a === 'l', f = $('#ex2f'); $$('#s19 [data-a]').forEach(x => x.classList.remove('ok', 'bad')); b.classList.add(ok ? 'ok' : 'bad'); f.className = 'fb ' + (ok ? 'ok' : 'bad'); f.textContent = ok ? '정답' : '응결 고도가 어떻게 바뀌는지 보세요.'; });
+
+/* ======================= 22장 공 비유 ======================= */
+(function(){
+  const svg = $('#ballSvg');
+  el('rect', {x: 0, y: 0, width: 820, height: 460, rx: 22, fill: 'var(--panel)'}, svg);
+  el('rect', {x: 860, y: 0, width: 820, height: 460, rx: 22, fill: 'var(--panel)'}, svg);
+  const hill = x => 140 + 240 * Math.pow((x - 1270) / 380, 2);
+  const vY = x => 400 - 260 * Math.pow((x - 410) / 360, 2);
+  let d = 'M50 ' + vY(50); for (let x = 50; x <= 770; x += 5) d += ` L${x} ${vY(x)}`; d += ' L770 460 L50 460Z';
+  el('path', {d, fill: 'var(--ground)', stroke: 'var(--ground-edge)', 'stroke-width': 2}, svg);
+  let d2 = 'M910 ' + hill(910); for (let x = 910; x <= 1630; x += 5) d2 += ` L${x} ${Math.min(460, hill(x))}`; d2 += ' L1630 460 L910 460Z';
+  el('path', {d: d2, fill: 'var(--ground)', stroke: 'var(--ground-edge)', 'stroke-width': 2}, svg);
+  const bA = el('circle', {r: 30, fill: 'var(--dew)'}, svg), bB = el('circle', {r: 30, fill: 'var(--env)'}, svg);
+  const A = {x: 410, v: 0}, B = {x: 1270, v: 0}; let raf = null;
+  function place(){ bA.setAttribute('cx', A.x); bA.setAttribute('cy', vY(A.x) - 30); bB.setAttribute('cx', B.x); bB.setAttribute('cy', Math.min(460, hill(B.x)) - 30); }
+  function loop(){
+    A.v += -(A.x - 410) * 0.012; A.v *= 0.97; A.x += A.v;
+    if (B.x !== 1270 || B.v) { B.v += (B.x - 1270) * 0.004; B.x += B.v; if (B.x < 940 || B.x > 1600) { B.x = Math.max(940, Math.min(1600, B.x)); B.v = 0; } }
+    place(); raf = requestAnimationFrame(loop);
+  }
+  $('#pushA').onclick = () => { A.v = 9; };
+  $('#pushB').onclick = () => { B.x = 1270; B.v = 2.5; };
+  onShow.s22 = () => { A.x = 410; A.v = 0; B.x = 1270; B.v = 0; place(); cancelAnimationFrame(raf); if (!reduceMotion) raf = requestAnimationFrame(loop); };
+  onLeave.s22 = () => cancelAnimationFrame(raf);
+  place();
+})();
+
+/* ======================= 23장 안정도 실험실 ======================= */
+(function(){
+  const S = {G: 8, T: 35, L: 2}, svg = $('#stSvg');
+  const sx = T => 50 + (T + 30) / 70 * 370, sy = z => 290 - z * 54;
+  const pT = z => z <= S.L ? S.T - 10 * z : S.T - 10 * S.L - 5 * (z - S.L);
+  const presets = {13: [4, 20, 2], 14: [12, 35, 1], 15: [8, 35, 2]};
+  function draw(){
+    svg.innerHTML = '';
+    for (let t = -30; t <= 40; t += 10) { el('line', {x1: sx(t), x2: sx(t), y1: sy(5), y2: sy(0), stroke: 'var(--grid)'}, svg); el('text', {x: sx(t), y: 307, 'text-anchor': 'middle', 'font-size': 12, fill: 'var(--t2)'}, svg, mn(t)); }
+    for (let z = 0; z <= 5; z++) { el('line', {x1: sx(-30), x2: sx(40), y1: sy(z), y2: sy(z), stroke: 'var(--grid)'}, svg); el('text', {x: 42, y: sy(z) + 4, 'text-anchor': 'end', 'font-size': 12, fill: 'var(--t2)'}, svg, z); }
+    el('text', {x: 420, y: 325, 'text-anchor': 'end', 'font-size': 12, fill: 'var(--t2)'}, svg, '기온(℃)');
+    el('text', {x: 50, y: 12, 'font-size': 12, fill: 'var(--t2)'}, svg, '고도(km)');
+    for (let z = 0; z < 5; z += 0.05) { const pe = S.T - S.G * z, pp = pT(z), a = Math.max(sx(-30), Math.min(sx(pe), sx(pp))), b = Math.min(sx(40), Math.max(sx(pe), sx(pp))); if (b > a) el('rect', {x: a, y: sy(z + 0.05), width: b - a, height: sy(z) - sy(z + 0.05) + 0.5, fill: pp > pe ? 'var(--env)' : 'var(--dew)', opacity: .14}, svg); }
+    const clip = (x1, y1, x2, y2, c, w) => el('line', {x1, y1, x2, y2, stroke: c, 'stroke-width': w}, svg);
+    const clipT = T => Math.max(-30, T), zAt = (T0, G, T) => (T0 - T) / G;
+    const eTop = S.T - S.G * 5 < -30 ? zAt(S.T, S.G, -30) : 5;
+    clip(sx(S.T), sy(0), sx(clipT(S.T - S.G * eTop)), sy(eTop), 'var(--env)', 3.5);
+    clip(sx(S.T), sy(0), sx(pT(S.L)), sy(S.L), 'var(--dry)', 3.5);
+    clip(sx(pT(S.L)), sy(S.L), sx(pT(5)), sy(5), 'var(--moist)', 3.5);
+    el('line', {x1: sx(-30), x2: sx(40), y1: sy(S.L), y2: sy(S.L), stroke: 'var(--moist)', 'stroke-dasharray': '4 4'}, svg);
+    el('text', {x: sx(-28), y: sy(S.L) - 5, 'font-size': 12, fill: 'var(--moist)', 'font-weight': 700}, svg, '응결 고도 ' + S.L + ' km');
+    let cls, badge, txt;
+    if (S.G < 5) { cls = 's'; badge = '절대 안정'; txt = '공기 덩어리가 어디서나 주변보다 차갑다(파란 영역). 층운형 구름.'; }
+    else if (S.G > 10) { cls = 'u'; badge = '절대 불안정'; txt = '처음부터 주변보다 따뜻하다(붉은 영역). 적운형 구름이 높게 발달.'; }
+    else if (S.G === 10 || S.G === 5) { cls = 'c'; badge = '경계'; txt = S.G === 10 ? '건조 단열 감률과 같다. 불포화면 중립, 포화되면 불안정.' : '습윤 단열 감률과 같다. 포화 공기에 대해 중립.'; }
+    else { cls = 'c'; badge = '조건부 불안정'; let zf = null; for (let z = 0.01; z <= 5; z += 0.01) if (pT(z) > S.T - S.G * z) { zf = z; break; }
+      txt = '불포화 구간에서는 주변보다 차가워 외부 힘이 필요하다.' + (zf != null ? ` 약 <b>${f1(zf)} km</b>부터 스스로 상승한다.` : ' 이 범위에서는 아직 따뜻해지지 않는다.'); }
+    $('#sOut').innerHTML = `<span class="badge ${cls}">${badge}</span><div class="t-cap" style="margin-top:16px">${txt}</div>`;
+    $('#sGv').textContent = f1(S.G) + ' ℃/km'; $('#sTv').textContent = S.T + ' ℃'; $('#sLv').textContent = S.L + ' km';
+    $$('#presets button').forEach(b => { const p = presets[b.dataset.p]; b.setAttribute('aria-pressed', String(p[0] === S.G && p[1] === S.T && p[2] === S.L)); });
+  }
+  function sync(){ S.G = +$('#sG').value; S.T = +$('#sT').value; S.L = +$('#sL').value; draw(); }
+  ['#sG', '#sT', '#sL'].forEach(s => $(s).addEventListener('input', sync));
+  $$('#presets button').forEach(b => b.onclick = () => { const p = presets[b.dataset.p]; $('#sG').value = p[0]; $('#sT').value = p[1]; $('#sL').value = p[2]; sync(); });
+  onShow.s23 = sync;
+})();
+
+/* ======================= 탐구활동 공통 — 단열선도 ======================= */
+const OBS = [[0,25,22],[0.5,27,21],[1,23,18],[1.5,18,15],[2,10,8],[3,-5,-10],[4,-16,-28],[5.5,-4,-34],[7.5,-4,-37],[9.5,-28,-42],[12,-50,-60]];
+const DL = 70, DR = 620, DT = 44, DB = 665;
+const dx = T => DL + (T + 60) / 90 * (DR - DL), dy = z => DB - z / 13 * (DB - DT);
+function diagram(svg, idp){
+  svg.innerHTML = '';
+  el('rect', {x: 0, y: 0, width: 640, height: 720, fill: 'var(--panel)', rx: 12}, svg);
+  const cp = el('clipPath', {id: idp + 'clip'}, el('defs', {}, svg)); el('rect', {x: DL, y: DT, width: DR - DL, height: DB - DT}, cp);
+  for (let t = -60; t <= 30; t += 10) { el('line', {x1: dx(t), x2: dx(t), y1: DT, y2: DB, stroke: 'var(--grid)', 'stroke-width': 1.5}, svg); el('text', {x: dx(t), y: DB + 26, 'text-anchor': 'middle', 'font-size': 20, fill: 'var(--t2)'}, svg, mn(t)); }
+  for (let z = 0; z <= 13; z++) { el('line', {x1: DL, x2: DR, y1: dy(z), y2: dy(z), stroke: 'var(--grid)', 'stroke-width': 1.5}, svg); el('text', {x: DL - 10, y: dy(z) + 7, 'text-anchor': 'end', 'font-size': 20, fill: 'var(--t2)'}, svg, z); }
+  el('text', {x: DR, y: DB + 52, 'text-anchor': 'end', 'font-size': 20, fill: 'var(--t2)'}, svg, '기온(℃)');
+  el('text', {x: 8, y: 24, 'font-size': 20, fill: 'var(--t2)'}, svg, '고도(km)');
+  const g = el('g', {'clip-path': `url(#${idp}clip)`}, svg);
+  for (let T0 = -60; T0 <= 160; T0 += 10) el('line', {x1: dx(T0), y1: dy(0), x2: dx(T0 - 130), y2: dy(13), stroke: 'var(--dry)', 'stroke-width': 1.2, opacity: .7}, g);
+  for (let T0 = -60; T0 <= 100; T0 += 10) el('line', {x1: dx(T0), y1: dy(0), x2: dx(T0 - 65), y2: dy(13), stroke: 'var(--moist)', 'stroke-width': 1.2, opacity: .7}, g);
+  for (let T0 = -60; T0 <= 60; T0 += 10) el('line', {x1: dx(T0), y1: dy(0), x2: dx(T0 - 26), y2: dy(13), stroke: 'var(--dew)', 'stroke-width': 1.4, 'stroke-dasharray': '2 4', opacity: .9}, g);
+  return g;
+}
+const profile = (parent, pts, color) => { if (pts.length > 1) el('polyline', {points: pts.map(p => dx(p[1]) + ',' + dy(p[0])).join(' '), fill: 'none', stroke: color, 'stroke-width': 4, 'stroke-linejoin': 'round'}, parent); pts.forEach(p => el('circle', {cx: dx(p[1]), cy: dy(p[0]), r: 6, fill: color, stroke: 'var(--panel)', 'stroke-width': 2}, parent)); };
+
+/* 26장 탐구하기 1 */
+(function(){
+  const tb = $('#obsT tbody');
+  OBS.forEach((r, i) => { const tr = document.createElement('tr'); tr.innerHTML = `<td>${r[0]}</td><td>${mn(r[1])}</td><td>${mn(r[2])}</td><td><input type="number" id="dd${i}" aria-label="고도 ${r[0]} km 기온 − 이슬점" style="height:50px;font-size:27px;width:120px"></td>`; tb.appendChild(tr); });
+  function check(show){
+    let ok = 0;
+    OBS.forEach((r, i) => { const inp = $('#dd' + i), ans = r[1] - r[2]; if (show) inp.value = ans; inp.classList.remove('ok', 'bad'); if (inp.value === '') return; if (+inp.value === ans) { inp.classList.add('ok'); ok++; } else inp.classList.add('bad'); });
+    const all = ok === OBS.length; $$('#obsT tbody tr').forEach((tr, i) => tr.classList.toggle('hot', all && i === 4));
+    const f = $('#dFb');
+    if (all) { f.className = 'fb ok'; f.innerHTML = '모두 정답.<br>차가 가장 작은 <b>2 km</b>(2 ℃) 기층의<br>상대 습도가 가장 높다.'; }
+    else { f.className = 'fb bad'; f.textContent = `${ok} / ${OBS.length}개 정답. 빨간 칸을 다시 계산해 보자. 음수끼리 뺄 때 주의!`; }
+  }
+  $('#dChk').onclick = () => check(false); $('#dAns').onclick = () => check(true);
+  $('#dClr').onclick = () => { OBS.forEach((r, i) => { const inp = $('#dd' + i); inp.value = ''; inp.classList.remove('ok', 'bad'); }); $$('#obsT tbody tr').forEach(tr => tr.classList.remove('hot')); $('#dFb').textContent = ''; };
+})();
+
+/* 27장 탐구하기 2 */
+(function(){
+  diagram($('#lineSvg'), 'ln');
+  const ans = {ln0: 'd', ln1: 'm', ln2: 'w'};
+  function check(){ let all = true, any = false; for (const id in ans) { const s = $('#' + id); s.classList.remove('ok', 'bad'); if (!s.value) { all = false; continue; } any = true; if (s.value === ans[id]) s.classList.add('ok'); else { s.classList.add('bad'); all = false; } }
+    const f = $('#lnFb'); if (!any) { f.textContent = ''; return; }
+    if (all) { f.className = 'fb ok'; f.textContent = '정답. 주황 = 건조 단열선, 초록 = 습윤 단열선, 파란 점선 = 이슬점 감률선'; } else { f.className = 'fb mid'; f.textContent = '1 km당 변화량: 불포화 10, 포화 5, 이슬점 2'; } }
+  Object.keys(ans).forEach(id => $('#' + id).addEventListener('change', check));
+})();
+
+/* 28장 탐구하기 3 */
+(function(){
+  const svg = $('#dSvg');
+  diagram(svg, 'pl');
+  const plot = el('g', {}, svg), tmp = el('g', {}, svg);
+  const TG = []; OBS.forEach(r => TG.push({z: r[0], T: r[1], k: 'T'})); OBS.forEach(r => TG.push({z: r[0], T: r[2], k: 'Td'}));
+  const rt = $('#refT tbody'); OBS.forEach(r => { const tr = document.createElement('tr'); tr.innerHTML = `<td>${r[0]}</td><td>${mn(r[1])}</td><td>${mn(r[2])}</td>`; rt.appendChild(tr); });
+  $$('#refT td').forEach(td => td.style.height = '42px');
+  let placed = 0;
+  function render(){
+    plot.innerHTML = '';
+    profile(plot, OBS.slice(0, Math.min(placed, 11)).map(r => [r[0], r[1]]), 'var(--env)');
+    if (placed > 11) profile(plot, OBS.slice(0, placed - 11).map(r => [r[0], r[2]]), 'var(--td)');
+    const t = TG[placed], rows = $$('#refT tbody tr');
+    rows.forEach((tr, i) => tr.classList.toggle('cur', !!t && OBS[i][0] === t.z));
+    $('#pTarget').innerHTML = t ? `다음 점 <span class="mute">(${placed + 1} / 22)</span> · 고도 <b>${t.z} km</b>의 <b class="${t.k === 'T' ? 'c-env' : 'c-td'}">${t.k === 'T' ? '기온' : '이슬점'} ${t.T} ℃</b>` : '22개 점을 모두 기입했다. 이제 각 층의 기울기를 단열선과 비교한다.';
+  }
+  svg.addEventListener('click', e => {
+    if (placed >= TG.length || Pen.on) return;
+    const pt = svg.createSVGPoint(); pt.x = e.clientX; pt.y = e.clientY; const p = pt.matrixTransform(svg.getScreenCTM().inverse());
+    const T = (p.x - DL) / (DR - DL) * 90 - 60, z = (DB - p.y) / (DB - DT) * 13, t = TG[placed], f = $('#pFb'); tmp.innerHTML = '';
+    if (Math.abs(T - t.T) <= 2.5 && Math.abs(z - t.z) <= 0.35) { placed++; f.className = 'fb ok'; f.textContent = '정확하다.'; render(); }
+    else { el('circle', {cx: p.x, cy: p.y, r: 8, fill: 'none', stroke: 'var(--bad)', 'stroke-width': 3}, tmp); f.className = 'fb bad'; f.textContent = `찍은 곳은 약 ${f1(z)} km, ${f1(T)} ℃. 눈금을 다시 보자.`; }
+  });
+  $('#pNext').onclick = () => { if (placed < TG.length) { placed++; tmp.innerHTML = ''; $('#pFb').textContent = ''; render(); } };
+  $('#pAll').onclick = () => { placed = TG.length; tmp.innerHTML = ''; $('#pFb').textContent = ''; render(); };
+  $('#pReset').onclick = () => { placed = 0; tmp.innerHTML = ''; $('#pFb').textContent = ''; render(); };
+  render();
+})();
+
+/* 29장 탐구하기 4 */
+(function(){
+  const LAY = []; for (let i = 0; i < OBS.length - 1; i++) { const a = OBS[i], b = OBS[i + 1]; LAY.push({lab: `${a[0]} ~ ${b[0]}`, G: (a[1] - b[1]) / (b[0] - a[0])}); }
+  const cls = G => G < 5 ? 's' : G > 10 ? 'u' : G === 10 ? 'n' : 'c';
+  const tb = $('#stabT tbody');
+  LAY.forEach((L, i) => { const tr = document.createElement('tr'), first = i === 0;
+    tr.innerHTML = `<td>${L.lab}</td><td id="g${i}" style="width:170px">?</td><td style="text-align:left"><select id="st${i}" aria-label="${L.lab} km 안정도" style="height:48px;font-size:25px"${first ? ' disabled' : ''}><option value="">선택</option><option value="s"${first ? ' selected' : ''}>절대 안정</option><option value="c">조건부 불안정</option><option value="u">절대 불안정</option><option value="n">중립(경계)</option></select> <span class="fb" id="sf${i}" style="font-size:21px;margin-left:10px">${first ? '예시 · 역전층' : ''}</span></td>`;
+    tb.appendChild(tr); });
+  $$('#stabT td').forEach(td => td.style.height = '56px');
+  const why = G => G < 0 ? '역전층' : G === 0 ? '등온층' : G < 5 ? 'Γ < 5' : G > 10 ? 'Γ > 10' : G === 10 ? '경계값' : '5 < Γ < 10';
+  function check(show){
+    let ok = 0;
+    LAY.forEach((L, i) => { const s = $('#st' + i), a = cls(L.G), f = $('#sf' + i); if (show) { s.value = a; $('#g' + i).textContent = mn(f1(L.G)); }
+      s.classList.remove('ok', 'bad', 'mid'); if (i === 0) { ok++; return; }
+      if (!s.value) { f.textContent = ''; return; }
+      if (s.value === a) { s.classList.add('ok'); ok++; f.className = 'fb ok'; f.textContent = why(L.G); }
+      else if (a === 'n' && (s.value === 'c' || s.value === 'u')) { s.classList.add('mid'); ok++; f.className = 'fb mid'; f.textContent = 'Γ = 10 경계값 · 토론'; }
+      else { s.classList.add('bad'); f.className = 'fb bad'; f.textContent = 'Γ를 5, 10과 비교'; } });
+    const fb = $('#sFb'); fb.className = ok === LAY.length ? 'fb ok' : 'fb';
+    fb.innerHTML = `${ok} / ${LAY.length}층 정답` + (ok === LAY.length ? '<br>불안정한 1.5~4 km에서 적운형 구름이 자라고,<br>4~7.5 km 안정층이 그 꼭대기를 막는다.' : '');
+  }
+  $('#sChk').onclick = () => check(false); $('#sAns').onclick = () => check(true);
+  $('#sShowG').onclick = () => LAY.forEach((L, i) => $('#g' + i).textContent = mn(f1(L.G)));
+})();
+
+/* 31장 정리하기 2 — 강제 상승 경로 */
+(function(){
+  const svg = $('#liftSvg'), g = diagram(svg, 'lf');
+  profile(el('g', {}, svg), OBS.map(r => [r[0], r[1]]), 'var(--env)');
+  const L = 0.375, TL = 21.25, pT = z => z <= L ? 25 - 10 * z : TL - 5 * (z - L);
+  const s1 = el('g', {'data-step': 1}, svg);
+  el('line', {x1: dx(25), y1: dy(0), x2: dx(TL), y2: dy(L), stroke: 'var(--dry)', 'stroke-width': 6}, s1);
+  const s3 = el('g', {'data-step': 3}, svg);
+  el('line', {x1: dx(TL), y1: dy(L), x2: dx(pT(1.72)), y2: dy(1.72), stroke: 'var(--moist)', 'stroke-width': 6}, s3);
+  const s4 = el('g', {'data-step': 4}, svg);
+  el('line', {x1: dx(pT(1.72)), y1: dy(1.72), x2: dx(pT(5.47)), y2: dy(5.47), stroke: 'var(--moist)', 'stroke-width': 6, 'stroke-dasharray': '10 6'}, s4);
+  [[1.72, '약 1.7 km', 4], [5.47, '약 5.5 km', 5]].forEach(([z, s, st]) => { const gg = el('g', {'data-step': st}, svg); el('line', {x1: DL, x2: DR, y1: dy(z), y2: dy(z), stroke: 'var(--act)', 'stroke-width': 2, 'stroke-dasharray': '6 5'}, gg); el('text', {x: DL + 8, y: dy(z) - 8, 'font-size': 23, 'font-weight': 700, fill: 'var(--act)', stroke: 'var(--panel)', 'stroke-width': 6, 'paint-order': 'stroke'}, gg, s); });
+})();
+
+/* 33장 출구 질문 */
+const QF = {a: '정답. 주변보다 차가우면 무거워 되돌아온다.', r: '정답. 응결한 물이 비로 빠져야 숨은열이 남는다.', k: '정답. 125 × 8 = 1000 m'};
+$$('.quiz').forEach(row => { const q = row.dataset.q, f = row.parentElement.querySelector('.fb');
+  $$('button', row).forEach(b => b.onclick = () => { $$('button', row).forEach(x => x.classList.remove('ok', 'bad')); const ok = b.dataset.v === q; b.classList.add(ok ? 'ok' : 'bad'); f.className = 'fb ' + (ok ? 'ok' : 'bad'); f.textContent = ok ? QF[q] : '다시 생각해 보자.'; }); });
+
+/* ======================= 마무리: KaTeX → 어절 줄바꿈 → 시작 ======================= */
+function keepWords(){
+  const skip = e => !e || e.closest('svg,script,style,.katex,button,select,option,canvas,.fb,#ui,.overlay,#notes,.w,[id^="f"],[id^="l"],[id^="ad"],#sOut,#pTarget,.read');
+  const w = document.createTreeWalker(stage, NodeFilter.SHOW_TEXT), nodes = [];
+  while (w.nextNode()) { const n = w.currentNode; if (!n.nodeValue.trim() || skip(n.parentElement)) continue; nodes.push(n); }
+  nodes.forEach(n => {
+    let t = n.nodeValue;
+    if (/^\S/.test(t) && n.previousSibling && n.previousSibling.nodeType === 1 && n.previousSibling.tagName !== 'BR') t = '⁠' + t;
+    if (/\S$/.test(t) && n.nextSibling && n.nextSibling.nodeType === 1 && n.nextSibling.tagName !== 'BR') t = t + '⁠';
+    const f = document.createDocumentFragment();
+    t = t.replace(/(\d)\s+(km|m|℃\/km|℃|%|hPa|회|개|층|쪽)/g, '$1 $2').replace(/(약|·|→)\s+/g, '$1 ').replace(/\s+(→|·)/g, ' $1');
+    t.split(/([ \t\n\r]+)/).forEach(tok => { if (!tok) return; if (/^[ \t\n\r]+$/.test(tok)) f.appendChild(document.createTextNode(tok)); else { const sp = document.createElement('span'); sp.className = 'w'; sp.style.whiteSpace = 'nowrap'; sp.textContent = tok; f.appendChild(sp); } });
+    n.parentNode.replaceChild(f, n);
+  });
+}
+let started = false;
+function finish(){
+  if (started) return; started = true;
+  if (window.renderMathInElement) renderMathInElement(stage, {delimiters: [{left: '$', right: '$', display: false}], throwOnError: false});
+  keepWords();
+  const m = location.hash.match(/^#(\d+)(?:\.(\d+))?/);
+  go(m ? +m[1] - 1 : 0, m && m[2] ? +m[2] : 0);
+  if (/[?&]audit/.test(location.search)) toggleOv('#audit');
+}
+if (document.readyState === 'complete') finish(); else addEventListener('load', finish);
+setTimeout(finish, 4000);   // KaTeX를 못 불러와도(오프라인) 시작한다
+window.Deck = {go, next, prev, get cur(){ return cur; }, get step(){ return step; }, slides};
+})();
+</script>
+</body>
+</html>
