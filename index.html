@@ -207,6 +207,11 @@ body.pen-on #ink{pointer-events:auto;cursor:crosshair}
   [data-step],.blank b{opacity:1!important;transform:none!important}
   #ui,#bar,.overlay,#notes,#blackout,#ink{display:none!important}
 }
+/* 식 유도: 왼쪽 설명, 오른쪽 식 */
+.drv{display:grid;gap:22px}
+.drv>div{display:grid;grid-template-columns:330px 1fr;gap:24px;align-items:center;min-height:84px}
+.drv .lb{font-size:30px;font-weight:600;line-height:1.35}
+.drv .fx{font-size:40px;line-height:1.3}
 </style>
 </head>
 <body>
@@ -314,23 +319,33 @@ body.pen-on #ink{pointer-events:auto;cursor:crosshair}
     <div class="card" data-step="1"><div class="k c-moist">구름 속은 5 ℃/km</div><h4 style="margin-top:20px">응결하면서 <span class="blank" data-reveal="2" style="min-width:200px"><b>숨은열</b></span>을 내놓는다</h4><p>수증기가 물방울이 될 때 방출하는 열이 팽창 냉각을 일부 상쇄한다. 그래서 1 km에 10 ℃가 아니라 약 5 ℃만 식는다.</p></div>
     <div class="card" data-step="3"><div class="k c-dew">이슬점도 2 ℃/km 내려간다</div><h4 style="margin-top:20px">부피가 커져 수증기압이 낮아진다</h4><p>같은 양의 수증기가 더 넓게 퍼지므로 응결이 시작되는 온도(이슬점)도 조금씩 낮아진다.</p></div>
   </div>
-  <div class="abs center t-lead" data-step="4" style="left:0;right:0;top:860px">기온 10, 이슬점 2 → 둘의 간격은 1 km마다 <b class="c-act">8 ℃</b>씩 좁혀진다</div>
+  <div class="abs center t-lead" data-step="4" style="left:0;right:0;top:860px">기온은 <b class="c-dry">빨리</b>, 이슬점은 <b class="c-dew">천천히</b> 내려간다 → 올라가다 보면 둘이 <b class="c-act">만난다</b></div>
 </section>
 
 <!-- 09 응결 고도 식 -->
-<section class="slide" id="s9" data-tile="parchment" data-sec="1. 단열 변화" data-title="응결 고도 H = 125(T − Td)">
-  <div class="hd"><div class="t-eyebrow in">1. 단열 변화 · 응결 고도 (기온 35 ℃, 이슬점 27 ℃인 공기)</div><div class="t-head in" style="--d:100">기온과 이슬점이 같아지는 높이에서 구름이 생긴다</div></div>
-  <table class="dt abs" style="left:120px;top:330px;font-size:40px">
-    <thead><tr><th style="width:220px">고도</th><th style="width:250px">0 km</th><th style="width:250px">0.5 km</th><th style="width:250px">1 km</th></tr></thead>
-    <tbody>
-      <tr><td class="c-dry" style="font-weight:600">기온</td><td>35 ℃</td><td data-step="1">30 ℃</td><td data-step="2">25 ℃</td></tr>
-      <tr><td class="c-dew" style="font-weight:600">이슬점</td><td>27 ℃</td><td data-step="1">26 ℃</td><td data-step="2">25 ℃</td></tr>
-      <tr><td style="font-weight:600">차이</td><td>8 ℃</td><td data-step="1">4 ℃</td><td data-step="2"><b class="c-act">0 ℃ → 구름!</b></td></tr>
-    </tbody>
-  </table>
-  <div class="abs t-body" data-step="3" style="left:120px;top:690px;right:120px">기온은 1 km에 <b class="c-dry">10 ℃</b>, 이슬점은 <b class="c-dew">2 ℃</b> 내려가므로, 둘의 차이는 1 km마다 <b class="c-act">8 ℃</b>씩 줄어든다.</div>
-  <div class="abs t-body" data-step="4" style="left:120px;top:800px;right:120px">차이 1 ℃가 줄어드는 데 1000 ÷ 8 = <b>125 m</b> → 응결 고도 = 125 × (기온 − 이슬점) <span class="mute">[m]</span></div>
-  <div class="abs t-cap mute" data-step="4" style="left:120px;top:900px;right:120px">이 공기는 125 × 8 = 1000 m에서 구름이 생긴다. 교과서 식: $H = 125\,(T - T_d)$</div>
+<section class="slide" id="s9" data-tile="parchment" data-sec="1. 단열 변화" data-title="응결 고도 식 만들기">
+  <div class="hd"><div class="t-eyebrow in">1. 단열 변화 · 응결 고도 식 만들기</div><div class="t-head in" style="--d:100">몇 m 올라가면 구름이 생길까?</div></div>
+  <div class="abs drv" style="left:120px;top:290px;width:1020px">
+    <div data-step="1"><span class="lb"><b class="c-act">①</b> 상승 후 <b class="c-dry">기온</b></span><span class="fx">$T_h = T - \left(\dfrac{1^\circ\mathrm{C}}{100\,\mathrm{m}}\right) \times H$</span></div>
+    <div data-step="2"><span class="lb"><b class="c-act">②</b> 상승 후 <b class="c-dew">이슬점</b></span><span class="fx">$T_{dh} = T_d - \left(\dfrac{0.2^\circ\mathrm{C}}{100\,\mathrm{m}}\right) \times H$</span></div>
+    <div data-step="3"><span class="lb"><b class="c-act">③</b> 응결 고도에서<br>둘이 같다 <span class="mute">$(T_h = T_{dh})$</span></span><span class="fx">$T - \dfrac{H}{100} = T_d - \dfrac{0.2H}{100}$</span></div>
+    <div data-step="4"><span class="lb"><b class="c-act">④</b> 양변에 100을 곱한다</span><span class="fx">$100T - H = 100T_d - 0.2H$</span></div>
+    <div data-step="5"><span class="lb"><b class="c-act">⑤</b> 정리한다</span><span class="fx">$100\,(T - T_d) = 0.8H$</span></div>
+    <div data-step="6"><span class="lb"><b class="c-act">⑥</b> $H$에 대해 푼다</span><span class="fx">$H = \dfrac{100}{0.8}\,(T - T_d) =$ <b class="c-act" style="border-bottom:4px solid currentColor;padding-bottom:4px">$125\,(T - T_d)$</b> <span class="mute">m</span></span></div>
+  </div>
+  <div class="abs panel" data-step="7" style="left:1180px;top:300px;width:620px">
+    <div class="t-label">확인 · 기온 35 ℃, 이슬점 27 ℃</div>
+    <table class="dt" style="margin-top:20px;font-size:32px;width:100%">
+      <thead><tr><th>고도</th><th>기온</th><th>이슬점</th><th>차이</th></tr></thead>
+      <tbody>
+        <tr><td>0 km</td><td class="c-dry">35 ℃</td><td class="c-dew">27 ℃</td><td>8 ℃</td></tr>
+        <tr><td>0.5 km</td><td class="c-dry">30 ℃</td><td class="c-dew">26 ℃</td><td>4 ℃</td></tr>
+        <tr><td>1 km</td><td class="c-dry">25 ℃</td><td class="c-dew">25 ℃</td><td><b class="c-act">0 ℃</b></td></tr>
+      </tbody>
+    </table>
+    <div class="t-body" style="margin-top:22px">차이가 0 → <b class="c-act">1 km에서 구름!</b></div>
+    <div class="t-body" style="margin-top:10px">식으로: 125 × (35 − 27) = <b class="c-act">1000 m</b></div>
+  </div>
 </section>
 
 <!-- 10 응결 고도 계산기 -->
@@ -694,8 +709,8 @@ const NOTES = {
   s5: "첫 번째 주제, 단열 변화입니다.",
   s6: "막대를 올려 공기 덩어리를 들어 올려 보세요. 주변 기압이 낮아져 **팽창**하고, 팽창에 에너지를 써서 **기온이 내려갑니다**. 내려오면 반대로 압축되어 데워집니다.",
   s7: "세 숫자를 기억합니다. 불포화 공기는 **10**, 구름 속 공기는 **약 5**, 이슬점은 **2** ℃/km입니다. 5는 평균값이고 실제로는 온도에 따라 달라집니다.",
-  s8: "구름 속에서 덜 식는 이유는 응결할 때 나오는 **숨은열** 때문입니다. 이슬점이 내려가는 이유는 팽창으로 수증기압이 낮아지기 때문입니다. 그래서 기온과 이슬점의 간격은 1 km마다 **8 ℃**씩 좁혀집니다.",
-  s9: "35 ℃, 이슬점 27 ℃인 공기를 0.5 km씩 올려 봅니다. 기온은 5 ℃, 이슬점은 1 ℃씩 내려가 차이가 8 → 4 → 0이 됩니다. **차이가 0이 되는 1 km에서 구름**이 생깁니다. 식은 이 규칙을 정리한 것일 뿐이라는 점을 강조합니다.",
+  s8: "구름 속에서 덜 식는 이유는 응결할 때 나오는 **숨은열** 때문입니다. 이슬점이 내려가는 이유는 팽창으로 수증기압이 낮아지기 때문입니다. 기온은 빨리, 이슬점은 천천히 내려가니 올라가다 보면 **둘이 만나는 높이**가 생긴다는 점까지만 짚고, 숫자 계산은 다음 장에서 합니다.",
+  s9: "H m 올라간 뒤의 기온(100 m에 1 ℃)과 이슬점(100 m에 0.2 ℃)을 각각 식으로 쓰고, 응결 고도에서는 **둘이 같다**는 조건으로 방정식을 세웁니다. 양변에 100을 곱해 정리하면 **100(T − Td) = 0.8H**, 따라서 **H = 125(T − Td)**. 마지막에 35 ℃ / 27 ℃ 공기를 표로 따라가며 1 km에서 구름이 생기는 것을 식과 비교해 확인합니다.",
   s10: "교과서 그림 10의 값(35 ℃, 이슬점 27 ℃)입니다. 이슬점을 올리면 구름 밑면이 내려오는 것을 보여 주세요.",
   s11: "두 번째 주제, 푄입니다.",
   s12: "우리나라의 대표적인 푄이 **높새바람**입니다. 영동은 비가 오고 서늘한데, 산을 넘은 영서는 고온 건조해집니다.",
